@@ -12,8 +12,6 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.InvalidClassException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +56,7 @@ class UserServiceTest {
 
     @Test
     void givenUserRegisterDTO_whenEmailInUse_thenThrowResourceAlreadyInUseException() {
-        String errorMessage = "Error in the field 'email', the value '" + dto.email() + "' is already in use!";
+        String errorMessage = "Error in the field 'email', the value '" + EMAIL + "' is already in use!";
         when(userRepository.findByEmail(anyString())).thenReturn(user);
 
         try{
@@ -93,9 +91,9 @@ class UserServiceTest {
     void givenUsername_whenLoadUserByUsername_thenReturnUserDetails() {
         when(userRepository.findByEmail(anyString())).thenReturn(user);
 
-        UserDetails response = service.loadUserByUsername("vanessa@gmail.com");
+        UserDetails response = service.loadUserByUsername(EMAIL);
 
-        assertEquals("vanessa@gmail.com", response.getUsername());
-        assertEquals("123", response.getPassword());
+        assertEquals(EMAIL, response.getUsername());
+        assertEquals(PASSWORD, response.getPassword());
     }
 }
