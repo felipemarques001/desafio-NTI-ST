@@ -1,7 +1,5 @@
 package com.felipemarques.desafioNTIST.services;
 
-import com.felipemarques.desafioNTIST.dtos.UserLoginDTO;
-import com.felipemarques.desafioNTIST.dtos.UserRegisterDTO;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
