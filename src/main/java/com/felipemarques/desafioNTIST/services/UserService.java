@@ -8,6 +8,7 @@ import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -18,9 +19,11 @@ import java.util.regex.Pattern;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void register(UserRegisterDTO dto) {
@@ -33,7 +36,7 @@ public class UserService implements UserDetailsService {
                 UUID.randomUUID(),
                 dto.name(),
                 dto.email(),
-                dto.password()
+                passwordEncoder.encode(dto.password())
         );
 
         userRepository.save(newUser);
