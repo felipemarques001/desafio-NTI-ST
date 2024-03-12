@@ -2,6 +2,7 @@ package com.felipemarques.desafioNTIST.services;
 
 import com.felipemarques.desafioNTIST.dtos.UserRegisterDTO;
 import com.felipemarques.desafioNTIST.exceptions.FieldAlreadyInUseException;
+import com.felipemarques.desafioNTIST.exceptions.InvalidPasswordException;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,9 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.InvalidClassException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,17 +31,22 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    UserRegisterDTO dto;
-    User user;
+    private UserRegisterDTO dto;
+    private User user;
+
+    private final String NAME = "Vanessa";
+    private final String EMAIL = "vanessa@gmail.com";
+    private final String PASSWORD = "Van#001";
+
 
     @BeforeEach
     void setUp() {
-        dto = new UserRegisterDTO("vanessa", "vanessa@gmail.com", "123");
-        user = new User(UUID.randomUUID(), "vanessa", "vanessa@gmail.com", "123");
+        dto = new UserRegisterDTO(NAME, EMAIL, PASSWORD);
+        user = new User(UUID.randomUUID(), NAME, EMAIL, PASSWORD);
     }
 
     @Test
-    void giverUserRegisterDTO_whenRegister_thenVerify() {
+    void givenUserRegisterDTO_whenRegister_thenVerify() {
         when(userRepository.findByEmail(anyString())).thenReturn(null);
         doNothing().when(userRepository).save(any(User.class));
 
@@ -58,6 +67,26 @@ class UserServiceTest {
             assertEquals(FieldAlreadyInUseException.class, ex.getClass());
             assertEquals(errorMessage, ex.getMessage());
         }
+    }
+
+    @Test
+    void givenInvalidPasswords_whenRegister_thenThrowInvalidPasswordException() {
+        String errorMessage = "The password must contain at least one uppercase letter," +
+                " one lowercase letter, one number, and one special character.";
+
+        List<String> invalidPasswords = List.of("van#001", "VAN#001", "Van001", "Van#");
+
+        invalidPasswords.forEach(invalidPassword -> {
+            dto = new UserRegisterDTO(NAME, EMAIL, invalidPassword);
+            when(userRepository.findByEmail(anyString())).thenReturn(null);
+
+            try{
+                service.register(dto);
+            } catch (Exception ex) {
+                assertEquals(InvalidPasswordException.class, ex.getClass());
+                assertEquals(errorMessage, ex.getMessage());
+            }
+        });
     }
 
     @Test
