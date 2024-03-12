@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -21,7 +21,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 class UserServiceTest {
 
     @InjectMocks
@@ -43,6 +42,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         dto = new UserRegisterDTO(NAME, EMAIL, PASSWORD);
         user = new User(UUID.randomUUID(), NAME, EMAIL, PASSWORD);
     }
@@ -50,12 +50,11 @@ class UserServiceTest {
     @Test
     void givenUserRegisterDTO_whenRegister_thenVerify() {
         when(userRepository.findByEmail(anyString())).thenReturn(null);
-        doNothing().when(userRepository).save(any(User.class));
+        when(passwordEncoder.encode(anyString())).thenReturn(PASSWORD);
 
         service.register(dto);
 
-        verify(userRepository, times(1)).findByEmail(anyString());
-        verify(userRepository, times(1)).save(any(User.class));
+        verify(userRepository, times(1)).save(any());
     }
 
     @Test

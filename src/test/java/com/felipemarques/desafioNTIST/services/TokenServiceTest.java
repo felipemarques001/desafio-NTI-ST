@@ -6,13 +6,12 @@ import com.felipemarques.desafioNTIST.models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class TokenServiceTest {
 
     @InjectMocks
@@ -22,6 +21,7 @@ class TokenServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         user = new User(UUID.randomUUID(), "Felipe", "felipe@gmail.com", "Felipe#001");
     }
 
