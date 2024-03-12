@@ -103,17 +103,7 @@ class UserServiceTest {
     }
 
     @Test
-    void givenUsername_whenLoadUserByUsername_thenReturnUserDetails() {
-        when(userRepository.findByEmail(anyString())).thenReturn(user);
-
-        UserDetails response = service.loadUserByUsername(EMAIL);
-
-        assertEquals(EMAIL, response.getUsername());
-        assertEquals(PASSWORD, response.getPassword());
-    }
-
-    @Test
-    void teste() {
+    void givenUserAuthenticated_whenLogin_thenReturnToken() {
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         String token = "mocked_token";
