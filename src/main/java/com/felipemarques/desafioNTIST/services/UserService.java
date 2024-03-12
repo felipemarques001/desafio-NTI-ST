@@ -1,10 +1,14 @@
 package com.felipemarques.desafioNTIST.services;
 
+import com.felipemarques.desafioNTIST.dtos.UserLoginDTO;
 import com.felipemarques.desafioNTIST.dtos.UserRegisterDTO;
 import com.felipemarques.desafioNTIST.exceptions.FieldAlreadyInUseException;
 import com.felipemarques.desafioNTIST.exceptions.InvalidPasswordException;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.repositories.UserRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,10 +24,14 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
     }
 
     public void register(UserRegisterDTO dto) {
@@ -45,6 +53,15 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username);
+    }
+
+    public String login(UserLoginDTO dto) {
+        UsernamePasswordAuthenticationToken usernamePasswordToken =
+                new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
+
+        Authentication authentication = authenticationManager.authenticate(usernamePasswordToken);
+
+        return tokenService.generateToken((User) authentication.getPrincipal());
     }
 
     private void validatePassword(String password) {
