@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -99,6 +100,16 @@ class UserServiceTest {
                 assertEquals(errorMessage, ex.getMessage());
             }
         });
+    }
+
+    @Test
+    void givenUsername_whenLoadUserByUsername_thenReturnUserDetails() {
+        when(userRepository.findByEmail(anyString())).thenReturn(user);
+
+        UserDetails response = service.loadUserByUsername(EMAIL);
+
+        assertEquals(EMAIL, response.getUsername());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
