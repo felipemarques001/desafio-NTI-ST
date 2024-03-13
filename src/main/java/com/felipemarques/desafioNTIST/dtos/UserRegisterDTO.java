@@ -1,15 +1,23 @@
 package com.felipemarques.desafioNTIST.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record UserRegisterDTO (
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserRegisterDTO {
+
         @NotBlank(message = "The 'name' cannot be empty!")
-        String name,
+        private String name;
 
         @NotBlank(message = "The 'email' cannot be empty!")
-        String email,
+        private String email;
 
         @NotBlank(message = "The 'password' cannot be empty!")
-        String password
-){
+        private String password;
 }

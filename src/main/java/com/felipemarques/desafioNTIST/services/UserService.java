@@ -9,9 +9,6 @@ import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +24,10 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       AuthenticationManager authenticationManager,
+                       TokenService tokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -35,16 +35,17 @@ public class UserService {
     }
 
     public void register(UserRegisterDTO dto) {
-        if(userRepository.findByEmail(dto.email()) != null)
-            throw new FieldAlreadyInUseException("email", dto.email());
+        if(userRepository.findByEmail(dto.getEmail()) != null) {
+            throw new FieldAlreadyInUseException("email", dto.getEmail());
+        }
 
-        validatePassword(dto.password());
+        validatePassword(dto.getPassword());
 
         User newUser = new User(
                 UUID.randomUUID(),
-                dto.name(),
-                dto.email(),
-                passwordEncoder.encode(dto.password())
+                dto.getName(),
+                dto.getEmail(),
+                passwordEncoder.encode(dto.getPassword())
         );
 
         userRepository.save(newUser);
@@ -52,7 +53,7 @@ public class UserService {
 
     public String login(UserLoginDTO dto) {
         UsernamePasswordAuthenticationToken usernamePasswordToken =
-                new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
+                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
 
         Authentication authentication = authenticationManager.authenticate(usernamePasswordToken);
 
