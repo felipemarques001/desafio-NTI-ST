@@ -35,8 +35,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         if(token != null) {
             String login = tokenService.validateTokenAndGetEmail(token);
             UserDetails user = userRepository.findByEmail(login);
-            Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            Authentication authentication = UsernamePasswordAuthenticationToken
+                    .authenticated(user, user.getPassword(), user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
@@ -44,8 +44,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private String getToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        if(authHeader == null)
+        if(authHeader == null) {
             return null;
+        }
         return authHeader.replace("Bearer ", "");
     }
 }

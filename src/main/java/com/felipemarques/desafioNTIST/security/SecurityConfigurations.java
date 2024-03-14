@@ -1,12 +1,11 @@
 package com.felipemarques.desafioNTIST.security;
 
-import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import com.felipemarques.desafioNTIST.services.AuthenticationService;
+import com.felipemarques.desafioNTIST.services.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
@@ -14,12 +13,22 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
+
+    private final JWTAuthenticationFilter jwtAuthenticationFilter;
+    private final TokenService tokenService;
+
+    public SecurityConfigurations(JWTAuthenticationFilter jwtAuthenticationFilter,
+                                  TokenService tokenService) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.tokenService = tokenService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -30,10 +39,16 @@ public class SecurityConfigurations {
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.loginPage("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .successHandler(authenticationSuccessHandler())
                         .permitAll())
                 .logout(LogoutConfigurer::permitAll)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new UserAuthenticationSuccessHandler(tokenService);
     }
 
     @Bean
