@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org" lang="pt-br">
+<head>
+    <title>Página de Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="container">
+    <h2>Login:</h2>
+    <div th:if="${param.success}">
+        <p>Cadastro realizado com sucesso! Por favor, faça login.</p>
+    </div>
+    <div th:if="${param.error}">
+        <p>E-mail ou senha inválida! Por favor, tente novamente.</p>
+    </div>
+    <form th:action="@{/login}" method="post">
+        <input name="username" type="text" placeholder="email">
+        <input name="password" type="password" placeholder="password">
+        <input type="submit" value="Entrar">
+    </form>
+</div>
+</body>
+</html>

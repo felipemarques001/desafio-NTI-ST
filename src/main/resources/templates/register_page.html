@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org" lang="pt-br">
+<head>
+    <title>Página de Cadastro</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <div class="container">
+        <h2>Seja bem-vindo</h2>
+        <form method="post" th:action="@{/register}" th:object="${newUser}">
+            <section>
+                <label for="name">nome</label>
+                <input type="text" id="name" th:field="*{name}">
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+            </section>
+            <section>
+                <label for="email">e-mail</label>
+                <input type="text" id="email" th:field="*{email}">
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                <p th:if="${emailInUse}" th:text="${emailInUse}"></p>
+            </section>
+            <section>
+                <label for="password">password</label>
+                <input type="password" id="password" th:field="*{password}">
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                <p th:if="${invalidPassword}" th:text="${invalidPassword}"></p>
+            </section>
+            <section class="section-button">
+                <button type="submit">Cadastrar</button>
+            </section>
+            <hr>
+            <p>Já possui uma conta? <a href="/home">Entrar</a></p>
+        </form>
+    </div>
+</body>
+</html>
