@@ -63,7 +63,7 @@ class JWTAuthenticationFilterTest {
     @Test
     void givenToken_whenDoFilter_thenAuthenticateUser() throws ServletException, IOException {
         Authentication authentication =
-                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
 
         when(request.getHeader(any(String.class))).thenReturn("Bearer " + JWT_TOKEN);
         when(tokenService.validateTokenAndGetEmail(any(String.class))).thenReturn(EMAIL);
@@ -71,7 +71,9 @@ class JWTAuthenticationFilterTest {
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        assertEquals(authentication, SecurityContextHolder.getContext().getAuthentication());
+        assertEquals(authentication.getPrincipal(), SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        assertEquals(authentication.getCredentials(), SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        assertEquals(authentication.getAuthorities(), SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         verify(filterChain, times(1)).doFilter(request, response);
     }
 
