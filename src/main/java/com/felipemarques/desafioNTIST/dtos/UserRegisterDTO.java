@@ -1,5 +1,6 @@
 package com.felipemarques.desafioNTIST.dtos;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,12 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserRegisterDTO {
 
-        @NotBlank(message = "The 'name' cannot be empty!")
+        @NotBlank(message = "O nome não pode ser vazio!")
         private String name;
 
-        @NotBlank(message = "The 'email' cannot be empty!")
+        @NotBlank(message = "O e-mail não pode ser vazio!")
+        @Email(message = "Por favor, insira um e-mail válido!")
         private String email;
 
-        @NotBlank(message = "The 'password' cannot be empty!")
+        @NotBlank(message = "A senha não pode ser vazia!")
         private String password;
 }
