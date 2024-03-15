@@ -56,4 +56,9 @@ public class TaskRepository {
         String sql = "DELETE FROM TB_TASK WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    public int updateCompletedStatus(Boolean completedValue, UUID id) {
+        String sql = "UPDATE TB_TASK SET completed = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, completedValue, id);
+    }
 }
