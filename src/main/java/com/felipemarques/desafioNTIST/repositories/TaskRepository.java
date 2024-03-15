@@ -65,6 +65,11 @@ public class TaskRepository {
         }
     }
 
+    public int updateDescriptionAndPriority(UUID id, String description, Priority priority) {
+        String sql = "UPDATE TB_TASK SET description = ?, priority = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, description, priority.getValue(), id);
+    }
+
     private Task mapTask(ResultSet rs) throws SQLException, SQLException {
         Task newTask = new Task();
         String savedPriority = rs.getString("priority");
