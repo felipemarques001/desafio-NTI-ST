@@ -51,4 +51,9 @@ public class TaskRepository {
             return newTask;
         }, userId);
     }
+
+    public int deleteById(UUID id) {
+        String sql = "DELETE FROM TB_TASK WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }
