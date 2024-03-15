@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-br">
+<html xmlns:th="https://www.thymeleaf.org" lang="pt-br">
 <head>
     <title>Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -7,5 +7,27 @@
 <body>
     <h1>Página home!</h1>
     <a href="tasks">Criar tarefa</a>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Prioridade</th>
+                <th>Completa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.description}"></td>
+                <td>
+                    <span th:if="${task.priority.getValue() eq 'high'}">alta</span>
+                    <span th:if="${task.priority.getValue() eq 'medium'}">média</span>
+                    <span th:if="${task.priority.getValue() eq 'low'}">baixa</span>
+                </td>
+                <td th:text="${task.completed}"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
