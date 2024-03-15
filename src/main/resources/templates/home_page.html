@@ -26,12 +26,23 @@
                     <span th:if="${task.priority.getValue() eq 'medium'}">média</span>
                     <span th:if="${task.priority.getValue() eq 'low'}">baixa</span>
                 </td>
-                <td th:text="${task.completed}">
+                <td>
+                    <input type="checkbox" th:checked="${task.completed}" th:attr="taskId=${task.id}" onchange="updateCompletedField(this)">
+                </td>
                 <td>
                     <a th:href="@{/tasks/delete(id=${task.id})}" onclick="return confirm('Tem certeza que quer excluir esta tarefa?')">Excluir</a>
                 </td>
             </tr>
         </tbody>
     </table>
+
+    <script>
+        function updateCompletedField(element) {
+            if (confirm('Tem certeza que quer marcar a tarefa como feita?')) {
+                let taskId = element.getAttribute('taskId');
+                window.location.href = "/tasks/update_completed_field?id=" + taskId;
+            }
+        }
+    </script>
 </body>
 </html>

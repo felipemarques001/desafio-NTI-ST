@@ -42,4 +42,10 @@ public class TaskController {
         taskService.deleteById(id);
         return "redirect:/home";
     }
+
+    @GetMapping("/update_completed_field")
+    public String updateCompletedField(@RequestParam UUID id) {
+        taskService.updateCompletedValue(id);
+        return "redirect:/home";
+    }
 }
