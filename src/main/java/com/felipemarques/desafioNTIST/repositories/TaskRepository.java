@@ -1,8 +1,12 @@
 package com.felipemarques.desafioNTIST.repositories;
 
+import com.felipemarques.desafioNTIST.models.Priority;
 import com.felipemarques.desafioNTIST.models.Task;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class TaskRepository {
@@ -23,5 +27,28 @@ public class TaskRepository {
                 task.getUserId(),
                 task.getCompleted()
         );
+    }
+
+    public List<Task> findByUserId(UUID userId) {
+        String sql = "SELECT id, description, priority, completed, user_id FROM TB_TASK WHERE user_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Task newTask = new Task();
+            String savedPriority = rs.getString("priority");
+
+            if(savedPriority.equals("high")) {
+                newTask.setPriority(Priority.HIGH);
+            } else if (savedPriority.equals("medium")) {
+                newTask.setPriority(Priority.MEDIUM);
+            } else {
+                newTask.setPriority(Priority.LOW);
+            }
+
+            newTask.setId(rs.getObject("id", UUID.class));
+            newTask.setDescription(rs.getString(("description")));
+            newTask.setCompleted(rs.getBoolean("completed"));
+            newTask.setUserId(rs.getObject("user_id", UUID.class));
+            return newTask;
+        }, userId);
     }
 }
