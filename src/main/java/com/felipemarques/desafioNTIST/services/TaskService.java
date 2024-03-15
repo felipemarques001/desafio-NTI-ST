@@ -63,4 +63,15 @@ public class TaskService {
 
         taskRepository.updateDescriptionAndPriority(id, description, priority);
     }
+
+    public Task findByIdAndUserId(UUID taskId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Task task = taskRepository.findByIdAndUserId(taskId, user.getId());
+
+        if(task == null) {
+            throw new TaskNotBelongToUser("A tarefa não pertence ao usuário logado!");
+        }
+
+        return task;
+    }
 }
