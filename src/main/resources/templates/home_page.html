@@ -30,6 +30,7 @@
                     <input type="checkbox" th:checked="${task.completed}" th:attr="taskId=${task.id}" onchange="updateCompletedField(this)">
                 </td>
                 <td>
+                    <a th:href="@{/tasks/update(id=${task.id})}">Atualizar</a>
                     <a th:href="@{/tasks/delete(id=${task.id})}" onclick="return confirm('Tem certeza que quer excluir esta tarefa?')">Excluir</a>
                 </td>
             </tr>
