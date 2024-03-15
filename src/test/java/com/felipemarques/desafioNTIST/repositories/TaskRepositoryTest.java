@@ -106,4 +106,24 @@ class TaskRepositoryTest {
         assertEquals(1, rowsAffected);
         assertEquals(!TASK_COMPLETED, tasks.get(0).getCompleted());
     }
+
+    @Test
+    void givenTaskAndUser_whenFindByIdAndUserId_thenReturnTask() {
+        userRepository.save(user);
+        taskRepository.save(task);
+
+        Task taskFounded = taskRepository.findByIdAndUserId(task.getId(), user.getId());
+
+        assertEquals(TASK_ID, taskFounded.getId());
+        assertEquals(TASK_DESCRIPTION, taskFounded.getDescription());
+        assertEquals(TASK_PRIORITY, taskFounded.getPriority());
+        assertEquals(TASK_COMPLETED, taskFounded.getCompleted());
+    }
+
+    @Test
+    void givenNotTask_whenFindByIdAndUserId_thenNull() {
+        Task taskFounded = taskRepository.findByIdAndUserId(task.getId(), user.getId());
+
+        assertNull(taskFounded);
+    }
 }
