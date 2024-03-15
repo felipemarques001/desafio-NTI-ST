@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,5 +55,31 @@ class TaskRepositoryTest {
 
         int rowsAffected = taskRepository.save(task);
         assertEquals(1, rowsAffected);
+    }
+
+    @Test
+    void givenUserAndTasks_whenFindByUserId_thenReturnTasks() {
+        userRepository.save(user);
+        taskRepository.save(task);
+
+        task.setId(UUID.randomUUID());
+        task.setPriority(Priority.MEDIUM);
+        taskRepository.save(task);
+
+        task.setId(UUID.randomUUID());
+        task.setPriority(Priority.LOW);
+        taskRepository.save(task);
+
+        List<Task> tasksFounded = taskRepository.findByUserId(user.getId());
+
+        assertEquals(3, tasksFounded.size());
+        assertEquals(TASK_ID, tasksFounded.get(0).getId());
+        assertEquals(TASK_DESCRIPTION, tasksFounded.get(0).getDescription());
+        assertEquals(TASK_PRIORITY, tasksFounded.get(0).getPriority());
+        assertEquals(TASK_COMPLETED, tasksFounded.get(0).getCompleted());
+        assertEquals(USER_ID, tasksFounded.get(0).getUserId());
+
+        assertEquals(Priority.MEDIUM, tasksFounded.get(1).getPriority());
+        assertEquals(Priority.LOW, tasksFounded.get(2).getPriority());
     }
 }
