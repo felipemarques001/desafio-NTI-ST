@@ -35,4 +35,8 @@ public class TaskService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return taskRepository.findByUserId(user.getId());
     }
+
+    public void deleteById(UUID taskId) {
+        taskRepository.deleteById(taskId);
+    }
 }
