@@ -17,10 +17,11 @@ public class UserRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int save(User user) {
+    public void save(User user) {
         String sql = "INSERT INTO TB_USER (id, name, email, password) VALUES (?, ?, ?, ?)";
 
-        return jdbcTemplate.update(sql,
+        // Este método retorna o número de rows modificadas com a operação
+        jdbcTemplate.update(sql,
                 user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }
 
