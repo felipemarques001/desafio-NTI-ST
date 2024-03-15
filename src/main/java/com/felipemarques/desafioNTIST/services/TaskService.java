@@ -7,6 +7,7 @@ import com.felipemarques.desafioNTIST.repositories.TaskRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,5 +29,10 @@ public class TaskService {
                 user.getId());
 
         taskRepository.save(newTask);
+    }
+
+    public List<Task> findByUserId() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return taskRepository.findByUserId(user.getId());
     }
 }
