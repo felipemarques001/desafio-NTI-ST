@@ -126,4 +126,16 @@ class TaskRepositoryTest {
 
         assertNull(taskFounded);
     }
+
+    @Test
+    void givenIdAndNewValues_whenUpdateDescriptionAndPriority_thenReturnOneRowAffected() {
+        userRepository.save(user);
+        taskRepository.save(task);
+
+        int rowAffected = taskRepository.updateDescriptionAndPriority(TASK_ID,
+                "New description",
+                Priority.MEDIUM);
+
+        assertEquals(1, rowAffected);
+    }
 }
