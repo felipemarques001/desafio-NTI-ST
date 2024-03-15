@@ -2,6 +2,7 @@ package com.felipemarques.desafioNTIST.services;
 
 import com.felipemarques.desafioNTIST.dtos.TaskRegisterDTO;
 import com.felipemarques.desafioNTIST.exceptions.TaskNotBelongToUser;
+import com.felipemarques.desafioNTIST.models.Priority;
 import com.felipemarques.desafioNTIST.models.Task;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.repositories.TaskRepository;
@@ -50,5 +51,16 @@ public class TaskService {
         }
 
         taskRepository.updateCompletedStatus(!task.getCompleted(), taskId);
+    }
+
+    public void updateDescriptionAndPriorityValue(UUID id, String description, Priority priority) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Task task = taskRepository.findByIdAndUserId(id, user.getId());
+
+        if(task == null) {
+            throw new TaskNotBelongToUser("A tarefa não pertence ao usuário logado!");
+        }
+
+        taskRepository.updateDescriptionAndPriority(id, description, priority);
     }
 }
