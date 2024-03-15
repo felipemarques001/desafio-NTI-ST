@@ -84,4 +84,10 @@ class TaskServiceTest {
         assertEquals(TASK_COMPLETED, tasksReturned.get(0).getCompleted());
         assertEquals(USER_ID, tasksReturned.get(0).getUserId());
     }
+
+    @Test
+    void givenTaskId_whenDeleteTaskById_thenCallDeleteMethod() {
+        taskService.deleteById(TASK_ID);
+        verify(taskRepository, times(1)).deleteById(TASK_ID);
+    }
 }
