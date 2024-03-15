@@ -82,4 +82,16 @@ class TaskRepositoryTest {
         assertEquals(Priority.MEDIUM, tasksFounded.get(1).getPriority());
         assertEquals(Priority.LOW, tasksFounded.get(2).getPriority());
     }
+
+    @Test
+    void givenTaskId_whenDeleteById_thenDeleteSuccessfully(){
+        userRepository.save(user);
+        taskRepository.save(task);
+
+        int rowsAffected = taskRepository.deleteById(TASK_ID);
+        List<Task> tasksFounded = taskRepository.findByUserId(USER_ID);
+
+        assertEquals(1, rowsAffected);
+        assertEquals(0, tasksFounded.size());
+    }
 }
