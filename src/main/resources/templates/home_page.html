@@ -15,6 +15,7 @@
                 <th>Descrição</th>
                 <th>Prioridade</th>
                 <th>Completa</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -25,7 +26,10 @@
                     <span th:if="${task.priority.getValue() eq 'medium'}">média</span>
                     <span th:if="${task.priority.getValue() eq 'low'}">baixa</span>
                 </td>
-                <td th:text="${task.completed}"></td>
+                <td th:text="${task.completed}">
+                <td>
+                    <a th:href="@{/tasks/delete(id=${task.id})}" onclick="return confirm('Tem certeza que quer excluir esta tarefa?')">Excluir</a>
+                </td>
             </tr>
         </tbody>
     </table>
