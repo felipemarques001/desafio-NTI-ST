@@ -1,7 +1,6 @@
 package com.felipemarques.desafioNTIST.controllers;
 
 import com.felipemarques.desafioNTIST.dtos.TaskRegisterDTO;
-import com.felipemarques.desafioNTIST.models.Task;
 import com.felipemarques.desafioNTIST.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -47,34 +46,6 @@ public class TaskController {
     @GetMapping("/update_completed_field")
     public String updateCompletedField(@RequestParam UUID id) {
         taskService.updateCompletedValue(id);
-        return "redirect:/home";
-    }
-
-    @GetMapping("/update")
-    public String showUpdateTaskPage(@RequestParam UUID id, Model model) {
-        Task task = taskService.findByIdAndUserId(id);
-        TaskRegisterDTO taskDto =
-                new TaskRegisterDTO(task.getDescription(), task.getPriority());
-
-        model.addAttribute("id", id);
-        model.addAttribute("task", taskDto);
-
-        return "update_task_page";
-    }
-
-    @PostMapping("/update")
-    public String updateTaskDescriptionAndPriority(@RequestParam UUID id,
-            @Valid @ModelAttribute("task") TaskRegisterDTO taskDto,
-            BindingResult result) {
-
-        if(result.hasErrors()) {
-            return "update_task_page";
-        }
-
-        taskService.updateDescriptionAndPriorityValue(id,
-                taskDto.getDescription(),
-                taskDto.getPriority());
-
         return "redirect:/home";
     }
 }
