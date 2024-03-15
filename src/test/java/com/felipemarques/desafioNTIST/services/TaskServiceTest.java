@@ -124,4 +124,44 @@ class TaskServiceTest {
             assertEquals("A tarefa não pertence ao usuário logado!", ex.getMessage());
         }
     }
+
+    @Test
+    void givenIdAndNewValues_whenUpdateDescriptionAndPriorityValue_thenUpdateTask() {
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(task);
+
+        taskService.updateDescriptionAndPriorityValue(TASK_ID,
+                "New description",
+                Priority.MEDIUM);
+
+        verify(taskRepository, times(1))
+                .updateDescriptionAndPriority(TASK_ID,
+                "New description",
+                Priority.MEDIUM);
+    }
+
+    @Test
+    void givenNotTask_whenUpdateDescriptionAndPriorityValue_thenThrowTaskNotBelongToUserException() {
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
+
+        try {
+            taskService.updateDescriptionAndPriorityValue(TASK_ID,
+                    "New description",
+                    Priority.MEDIUM);
+        } catch (Exception ex) {
+            assertEquals(TaskNotBelongToUser.class, ex.getClass());
+            assertEquals("A tarefa não pertence ao usuário logado!", ex.getMessage());
+        }
+    }
 }
