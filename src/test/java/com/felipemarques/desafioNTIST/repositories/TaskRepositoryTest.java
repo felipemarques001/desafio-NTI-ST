@@ -94,4 +94,16 @@ class TaskRepositoryTest {
         assertEquals(1, rowsAffected);
         assertEquals(0, tasksFounded.size());
     }
+
+    @Test
+    void givenCompletedAndId_whenUpdateCompletedStatus_thenReturnOneRowAffected() {
+        userRepository.save(user);
+        taskRepository.save(task);
+
+        int rowsAffected = taskRepository.updateCompletedStatus(!TASK_COMPLETED, task.getId());
+        List<Task> tasks = taskRepository.findByUserId(user.getId());
+
+        assertEquals(1, rowsAffected);
+        assertEquals(!TASK_COMPLETED, tasks.get(0).getCompleted());
+    }
 }
