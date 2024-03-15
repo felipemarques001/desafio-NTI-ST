@@ -1,6 +1,7 @@
 package com.felipemarques.desafioNTIST.services;
 
 import com.felipemarques.desafioNTIST.dtos.TaskRegisterDTO;
+import com.felipemarques.desafioNTIST.exceptions.TaskNotBelongToUser;
 import com.felipemarques.desafioNTIST.models.Priority;
 import com.felipemarques.desafioNTIST.models.Task;
 import com.felipemarques.desafioNTIST.models.User;
@@ -89,5 +90,38 @@ class TaskServiceTest {
     void givenTaskId_whenDeleteTaskById_thenCallDeleteMethod() {
         taskService.deleteById(TASK_ID);
         verify(taskRepository, times(1)).deleteById(TASK_ID);
+    }
+
+    @Test
+    void givenTaskAndUser_whenUpdateCompletedValue_thenUpdateCompletedField() {
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(task);
+
+        taskService.updateCompletedValue(TASK_ID);
+
+        verify(taskRepository, times(1)).updateCompletedStatus(!TASK_COMPLETED, TASK_ID);
+    }
+
+    @Test
+    void givenNotTask_whenUpdateCompletedValue_thenThrowTaskNotBelongToUserException() {
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
+
+        try {
+            taskService.updateCompletedValue(TASK_ID);
+        } catch (Exception ex) {
+            assertEquals(TaskNotBelongToUser.class, ex.getClass());
+            assertEquals("A tarefa não pertence ao usuário logado!", ex.getMessage());
+        }
     }
 }
