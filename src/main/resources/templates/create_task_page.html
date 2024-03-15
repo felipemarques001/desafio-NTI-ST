@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org" lang="pt-br">
+<head>
+    <title>Adicionar Tarefa</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1>Cadastrar tarefa:</h1>
+    <div class="container">
+        <form method="post" th:action="@{/tasks}" th:object="${newTask}">
+            <section>
+                <label for="description">Descrição:</label>
+                <br>
+                <textarea id="description" th:field="*{description}" cols="30" rows="8"></textarea>
+                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+            </section>
+            <section>
+                <label for="priority">Prioridade:</label>
+                <select name="priority" id="priority" th:field="*{priority}">
+                    <option value="HIGH">Alta</option>
+                    <option value="MEDIUM">Média</option>
+                    <option value="LOW">Baixa</option>
+                </select>
+                <p th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></p>
+            </section>
+            <section class="section-button">
+                <button type="submit">Criar</button>
+            </section>
+        </form>
+    </div>
+</body>
+</html>
