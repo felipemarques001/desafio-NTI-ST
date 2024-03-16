@@ -3,30 +3,40 @@
 <head>
     <title>Adicionar Tarefa</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/create_task.css}">
 </head>
 <body>
-    <h1>Cadastrar tarefa:</h1>
-    <div class="container">
+    <div class="form-container">
+        <h1>Cadastrar tarefa</h1>
+        <p>Preencha os campos abaixo para cadastrar uma tarefa:</p>
+
         <form method="post" th:action="@{/tasks}" th:object="${newTask}">
-            <section>
+            <section class="input_box">
                 <label for="description">Descrição:</label>
-                <br>
-                <textarea id="description" th:field="*{description}" cols="30" rows="8"></textarea>
-                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+                <textarea id="description" th:field="*{description}"></textarea>
+                <div th:if="${#fields.hasErrors('description')}" class="error_text">
+                    <p th:errors="*{description}"></p>
+                </div>
             </section>
-            <section>
+
+            <section class="input_box">
                 <label for="priority">Prioridade:</label>
                 <select name="priority" id="priority" th:field="*{priority}">
                     <option value="HIGH">Alta</option>
                     <option value="MEDIUM">Média</option>
                     <option value="LOW">Baixa</option>
                 </select>
-                <p th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></p>
+                <div th:if="${#fields.hasErrors('priority')}" class="error_text">
+                    <p th:errors="*{priority}"></p>
+                </div>
             </section>
-            <section class="section-button">
-                <button type="submit">Criar</button>
+
+            <section id="button_box">
+                <input type="submit" value="Criar">
             </section>
         </form>
+
+        <p>Voltar para a página principal? <a th:href="@{/home}">Voltar</a></p>
     </div>
 </body>
 </html>
