@@ -3,50 +3,39 @@
 <head>
     <title>Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" th:href="@{/css/home_page.css}">
 </head>
 <body>
-    <header>
-        <nav>
-            <p>Olá, <span th:text="${userName}"></span>! Aqui estão todas as suas tarefas.</p>
-            <form>
-                <input type="submit" value="Sair">
-            </form>
-        </nav>
-    </header>
+    <h1>Página home!</h1>
+    <a href="tasks">Criar tarefa</a>
     <br>
-    <main>
-        <div id="main-container">
-            <a href="tasks" id="create-task-button">Criar tarefa</a>
-            <table>
-                <thead>
-                <tr>
-                    <th class="table-header">Descrição</th>
-                    <th class="table-header">Prioridade</th>
-                    <th class="table-header">Feita</th>
-                    <th class="table-header">Ações</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="task : ${tasks}">
-                    <td th:text="${task.description}" class="table-data" id="description-text"></td>
-                    <td class="table-data">
-                        <span th:if="${task.priority.getValue() eq 'high'}">alta</span>
-                        <span th:if="${task.priority.getValue() eq 'medium'}">média</span>
-                        <span th:if="${task.priority.getValue() eq 'low'}">baixa</span>
-                    </td>
-                    <td class="table-data">
-                        <input type="checkbox" th:checked="${task.completed}" th:attr="taskId=${task.id}" onchange="updateCompletedField(this)">
-                    </td>
-                    <td class="table-data actions">
-                        <a th:href="@{/tasks/update(id=${task.id})}" id="update-task-button">Atualizar</a>
-                        <a th:href="@{/tasks/delete(id=${task.id})}" onclick="return confirm('Tem certeza que quer excluir esta tarefa?')" id="delete-task-button">Excluir</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Prioridade</th>
+                <th>Completa</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.description}"></td>
+                <td>
+                    <span th:if="${task.priority.getValue() eq 'high'}">alta</span>
+                    <span th:if="${task.priority.getValue() eq 'medium'}">média</span>
+                    <span th:if="${task.priority.getValue() eq 'low'}">baixa</span>
+                </td>
+                <td>
+                    <input type="checkbox" th:checked="${task.completed}" th:attr="taskId=${task.id}" onchange="updateCompletedField(this)">
+                </td>
+                <td>
+                    <a th:href="@{/tasks/update(id=${task.id})}">Atualizar</a>
+                    <a th:href="@{/tasks/delete(id=${task.id})}" onclick="return confirm('Tem certeza que quer excluir esta tarefa?')">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
     <script>
         function updateCompletedField(element) {
