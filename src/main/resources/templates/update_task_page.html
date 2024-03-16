@@ -3,33 +3,40 @@
 <head>
     <title>Atualizar Tarefa</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/create_and_update_task.css}">
 </head>
 <body>
-<h1>Atualizar tarefa:</h1>
-<div class="container">
-    <form method="post" th:action="@{/tasks/update(id=${id})}" th:object="${task}">
+    <div class="form-container">
+        <h1>Atualizar tarefa:</h1>
+        <p>Preencha os campos abaixo para atualizar a tarefa:</p>
 
-        <section>
-            <label for="description">Descrição:</label>
-            <br>
-            <textarea id="description" th:value="*{description}" th:field="*{description}" cols="30" rows="8"></textarea>
-            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
-        </section>
+        <form method="post" th:action="@{/tasks/update(id=${id})}" th:object="${task}">
+            <section class="input_box">
+                <label for="description">Descrição:</label>
+                <textarea id="description" th:value="*{description}" th:field="*{description}"></textarea>
+                <div th:if="${#fields.hasErrors('description')}" class="error_text">
+                    <p th:errors="*{description}"></p>
+                </div>
+            </section>
 
-        <section>
-            <label for="priority">Prioridade:</label>
-            <select name="priority" id="priority" th:field="*{priority}" th:value="*{priority}">
-                <option value="HIGH">Alta</option>
-                <option value="MEDIUM">Média</option>
-                <option value="LOW">Baixa</option>
-            </select>
-            <p th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></p>
-        </section>
+            <section class="input_box">
+                <label for="priority">Prioridade:</label>
+                <select name="priority" id="priority" th:field="*{priority}" th:value="*{priority}">
+                    <option value="HIGH">Alta</option>
+                    <option value="MEDIUM">Média</option>
+                    <option value="LOW">Baixa</option>
+                </select>
+                <div th:if="${#fields.hasErrors('priority')}" class="error_text">
+                    <p th:errors="*{priority}"></p>
+                </div>
+            </section>
 
-        <section class="section-button">
-            <button type="submit">Editar</button>
-        </section>
-    </form>
-</div>
+            <section id="button_box">
+                <input type="submit" value="Atualizar">
+            </section>
+        </form>
+
+        <p>Voltar para a página principal? <a th:href="@{/home}">Voltar</a></p>
+    </div>
 </body>
 </html>
