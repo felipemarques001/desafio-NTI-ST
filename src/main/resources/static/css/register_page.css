@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins","Arial",serif;
+}
+
+body {
+    min-width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #D3D3D3FF;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 25%;
+    background-color: #FFFFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.93);
+    border-radius: 5px;
+}
+
+.form-container h1 {
+    padding: 20px 10px;
+}
+
+.form-container p {
+    text-align: center;
+    padding: 20px 10px;
+    font-size: 16px;
+}
+
+.form-container a {
+    cursor: pointer;
+    color: #7d2ae8;
+    text-decoration: none;
+}
+
+.form-container a:hover {
+    border-bottom: 2px solid #7d2ae8;
+}
+
+.error_text {
+    width: 100%;
+    margin: 0 15px 0 15px;
+}
+
+.error_text p {
+    padding: 0 10px;
+    text-align: left;
+    font-size: 15px;
+    color: #ff0000;
+}
+
+.last_error_text {
+    margin-bottom: 10px;
+}
+
+.form-container form {
+    width: 100%;
+}
+
+.input_box {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.input_box input {
+    width: 100%;
+    margin: 0 10px 10px 10px;
+    padding: 5px;
+    border: 0;
+    border-bottom: 2px solid rgb(200, 200, 200);
+    outline: 0;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+.input_box input:hover {
+    border-bottom: 2px solid #7d2ae8;
+    font-size: 15px;
+}
+
+#button_box {
+    display: flex;
+    justify-content: center;
+}
+
+#button_box input {
+    width: 90%;
+    margin: 10px 0;
+    border: 0;
+    outline: 0;
+    border-bottom: 2px solid rgb(200, 200, 200);
+    transition: 0.3s;
+    background-color: #7d2ae8;
+    border-radius: 10px;
+    color: #fff;
+    padding: 10px 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#button_box input:hover {
+    font-size: 17px;
+}
+
+@media only screen and (max-width: 1500px){
+    .form-container {
+        width: 30%;
+    }
+}
+
+@media only screen and (max-width: 1200px){
+    .form-container {
+        width: 40%;
+    }
+}
+
+@media only screen and (max-width: 900px){
+    .form-container {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 650px){
+    .form-container {
+        width: 70%;
+    }
+}
+
+@media only screen and (max-width: 400px){
+    .form-container {
+        width: 90%;
+    }
+}

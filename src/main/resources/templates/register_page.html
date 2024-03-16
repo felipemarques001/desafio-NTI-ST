@@ -3,33 +3,46 @@
 <head>
     <title>Página de Cadastro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/register_page.css}">
 </head>
 <body>
-    <div class="container">
-        <h2>Seja bem-vindo</h2>
+    <div class="form-container">
+        <h1>Cadastro</h1>
+        <p>Preencha os campos abaixo para realizar o seu cadastro!</p>
+
         <form method="post" th:action="@{/register}" th:object="${newUser}">
-            <section>
-                <label for="name">nome</label>
-                <input type="text" id="name" th:field="*{name}">
-                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+            <section class="input_box">
+                <input type="text" id="name" th:field="*{name}" placeholder="Nome">
             </section>
-            <section>
-                <label for="email">e-mail</label>
-                <input type="text" id="email" th:field="*{email}">
-                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-                <p th:if="${emailInUse}" th:text="${emailInUse}"></p>
+            <div th:if="${#fields.hasErrors('name')}" class="error_text">
+                <p th:errors="*{name}"></p>
+            </div>
+
+            <section class="input_box">
+                <input type="text" id="email" th:field="*{email}" placeholder="E-mail">
             </section>
-            <section>
-                <label for="password">password</label>
-                <input type="password" id="password" th:field="*{password}">
-                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-                <p th:if="${invalidPassword}" th:text="${invalidPassword}"></p>
+            <div th:if="${#fields.hasErrors('email')}" class="error_text">
+                <p th:errors="*{email}"></p>
+            </div>
+            <div th:if="${emailInUse}" class="error_text">
+                <p>E-mail já cadastrado!</p>
+            </div>
+
+            <section class="input_box">
+                <input type="password" id="password" th:field="*{password}" placeholder="Senha">
             </section>
-            <section class="section-button">
-                <button type="submit">Cadastrar</button>
+            <div th:if="${#fields.hasErrors('password')}" class="error_text">
+                <p th:errors="*{password}"></p>
+            </div>
+            <div th:if="${invalidPassword}" class="error_text last_error_text">
+                <p>A senha deve conter letras maísculas, minúsculas, símbolos e números</p>
+            </div>
+
+            <section id="button_box">
+                <input type="submit" value="Cadastrar">
             </section>
-            <hr>
-            <p>Já possui uma conta? <a href="/home">Entrar</a></p>
+
+            <p>Já possui uma conta? <a th:href="@{/home}">Entrar</a></p>
         </form>
     </div>
 </body>
