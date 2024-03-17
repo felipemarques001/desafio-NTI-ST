@@ -38,6 +38,11 @@ public class TaskService {
         return taskRepository.findByUserId(user.getId());
     }
 
+    public List<Task> findUncompletedTaskByUserId() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return taskRepository.findTasksUncompletedByUserId(user.getId());
+    }
+
     public void deleteById(UUID taskId) {
         taskRepository.deleteById(taskId);
     }
