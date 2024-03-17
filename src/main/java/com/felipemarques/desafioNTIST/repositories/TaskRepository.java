@@ -39,16 +39,6 @@ public class TaskRepository {
                 userId);
     }
 
-    public int deleteById(UUID id) {
-        String sql = "DELETE FROM TB_TASK WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
-    }
-
-    public int updateCompletedStatus(Boolean completedValue, UUID id) {
-        String sql = "UPDATE TB_TASK SET completed = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, completedValue, id);
-    }
-
     public Task findByIdAndUserId(UUID id, UUID userId) {
         String sql = "SELECT id, description, priority, completed, user_id " +
                 "FROM TB_TASK WHERE id = ? AND user_id = ?";
@@ -63,6 +53,25 @@ public class TaskRepository {
         } else {
             return taskFounded.get(0);
         }
+    }
+
+    public List<Task> findTasksUncompletedByUserId(UUID userId) {
+        String sql = "SELECT id, description, priority, completed, user_id " +
+                "FROM TB_TASK WHERE completed = false AND user_id = ?";
+
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> mapTask(rs),
+                userId);
+    }
+
+    public int deleteById(UUID id) {
+        String sql = "DELETE FROM TB_TASK WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
+
+    public int updateCompletedStatus(Boolean completedValue, UUID id) {
+        String sql = "UPDATE TB_TASK SET completed = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, completedValue, id);
     }
 
     public int updateDescriptionAndPriority(UUID id, String description, Priority priority) {
