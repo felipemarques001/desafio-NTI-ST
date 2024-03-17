@@ -64,6 +64,16 @@ public class TaskRepository {
                 userId);
     }
 
+    public List<Task> findUncompletedTasksByUserIdAndPriority(UUID userId, Priority priority) {
+        String sql = "SELECT id, description, priority, completed, user_id " +
+                "FROM TB_TASK WHERE completed = false AND user_id = ? AND priority = ?";
+
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> mapTask(rs),
+                userId,
+                priority.getValue());
+    }
+
     public int deleteById(UUID id) {
         String sql = "DELETE FROM TB_TASK WHERE id = ?";
         return jdbcTemplate.update(sql, id);
