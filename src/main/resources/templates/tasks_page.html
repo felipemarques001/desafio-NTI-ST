@@ -9,7 +9,7 @@
     <header>
         <nav>
             <p>Olá, <span th:text="${firstUserName}"></span>! Aqui estão todas as suas tarefas.</p>
-            <form>
+            <form th:action="@{/logout}" method="post">
                 <input type="submit" value="Sair">
             </form>
         </nav>

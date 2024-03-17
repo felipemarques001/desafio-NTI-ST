@@ -37,12 +37,15 @@ public class SecurityConfigurations {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/logout").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.loginPage("/login")
                         .successHandler(authenticationSuccessHandler())
                         .permitAll())
-                .logout(LogoutConfigurer::permitAll)
+                .logout(logout -> logout.logoutUrl("/logout")
+                        .deleteCookies("JWT_TOKEN")
+                        .logoutSuccessUrl("/login"))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
