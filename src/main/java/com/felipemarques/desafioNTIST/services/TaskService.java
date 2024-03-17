@@ -43,6 +43,11 @@ public class TaskService {
         return taskRepository.findTasksUncompletedByUserId(user.getId());
     }
 
+    public List<Task> findUncompletedTaskWithFilter(Priority priority) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return taskRepository.findUncompletedTasksByUserIdAndPriority(user.getId(), priority);
+    }
+
     public void deleteById(UUID taskId) {
         taskRepository.deleteById(taskId);
     }
