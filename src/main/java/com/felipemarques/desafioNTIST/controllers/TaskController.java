@@ -87,7 +87,7 @@ public class TaskController {
 
     @GetMapping("/update_completed_field")
     public String updateCompletedField(@RequestParam UUID id) {
-        taskService.updateCompletedValue(id);
+        taskService.updateCompletedStatus(id);
         return "redirect:/tasks";
     }
 
@@ -113,7 +113,7 @@ public class TaskController {
             return "update_task_page";
         }
 
-        taskService.updateDescriptionAndPriorityValue(id,
+        taskService.updateValues(id,
                 taskDto.getDescription(),
                 taskDto.getPriority());
 
