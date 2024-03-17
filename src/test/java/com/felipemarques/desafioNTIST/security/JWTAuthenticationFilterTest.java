@@ -5,6 +5,7 @@ import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import com.felipemarques.desafioNTIST.services.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,7 +65,10 @@ class JWTAuthenticationFilterTest {
     @Test
     @DisplayName("Given JWT token, when doFilter(), then authenticate user")
     void doFilterTest() throws ServletException, IOException {
-        when(request.getHeader(any(String.class))).thenReturn("Bearer " + JWT_TOKEN);
+
+        Cookie[] cookies = new Cookie[] { new Cookie("JWT_TOKEN", JWT_TOKEN) };
+
+        when(request.getCookies()).thenReturn(cookies);
         when(tokenService.validateTokenAndGetEmail(any(String.class))).thenReturn(EMAIL);
         when(userRepository.findByEmail(any(String.class))).thenReturn(user);
 
@@ -81,7 +83,8 @@ class JWTAuthenticationFilterTest {
     @Test
     @DisplayName("Not given JWT token, when doFilter(), then not authenticate user")
     void doFilterTestCase2() throws ServletException, IOException {
-        when(request.getHeader(any(String.class))).thenReturn(null);
+        Cookie[] cookies = new Cookie[0];
+        when(request.getCookies()).thenReturn(cookies);
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
@@ -92,33 +95,24 @@ class JWTAuthenticationFilterTest {
     }
 
     @Test
-    @DisplayName("Given JWT token, when getToken(), then return JWT token")
-    void getTokenTest()
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String token = "test_token";
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+    @DisplayName("Given JWT token cookie, when getToken(), then return JWT token")
+    void getTokenTest() {
+        Cookie[] cookies = new Cookie[] { new Cookie("JWT_TOKEN", JWT_TOKEN) };
+        when(request.getCookies()).thenReturn(cookies);
 
-        Method getTokenMethod = JWTAuthenticationFilter.class
-                .getDeclaredMethod("getToken", HttpServletRequest.class);
-        getTokenMethod.setAccessible(true);
-        String result = (String) getTokenMethod.invoke(jwtAuthenticationFilter, request);
+        String token = jwtAuthenticationFilter.getToken(request);
 
-        assertEquals(token, result);
+        assertEquals(JWT_TOKEN, token);
     }
 
     @Test
-    @DisplayName("Not given JWT token, when getToken(), then return null")
-    void getTokenTestCase2()
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getTokenMethod = JWTAuthenticationFilter.class
-                .getDeclaredMethod("getToken", HttpServletRequest.class);
+    @DisplayName("Not given JWT token cookie, when getToken(), then return null")
+    void getTokenTestCase2() {
+        Cookie[] cookies = new Cookie[0];
+        when(request.getCookies()).thenReturn(cookies);
 
-        getTokenMethod.setAccessible(true);
+        String token = jwtAuthenticationFilter.getToken(request);
 
-        when(request.getHeader("Authorization")).thenReturn(null);
-
-        String result = (String) getTokenMethod.invoke(jwtAuthenticationFilter, request);
-
-        assertNull(result);
+        assertNull(token);
     }
 }

@@ -10,7 +10,7 @@
         <nav>
             <p>Olá, <span th:text="${firstUserName}"></span>! Aqui estão todas as suas tarefas.</p>
             <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Sair">
+                <input type="submit" value="Sair" onclick="deleteJwtTokenCookie()">
             </form>
         </nav>
     </header>
@@ -57,6 +57,11 @@
                 let taskId = element.getAttribute('taskId');
                 window.location.href = "/tasks/update_completed_field?id=" + taskId;
             }
+        }
+
+        function deleteJwtTokenCookie() {
+            const expirationDate = new Date(0);
+            document.cookie = 'JWT_TOKEN=; expires=' + expirationDate.toUTCString() + '; path=/';
         }
     </script>
 </body>

@@ -11,7 +11,7 @@
         <nav>
             <p>Olá, <span th:text="${firstUserName}"></span>! Aqui estão todas as suas tarefas incompletas.</p>
             <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Sair">
+                <input type="submit" value="Sair" onclick="deleteJwtTokenCookie()">
             </form>
         </nav>
     </header>
@@ -74,6 +74,11 @@
         function filter(element) {
             let filterOption = element.value;
             window.location.href = "/tasks/uncompletedTasksWithFilter?priority=" + filterOption;
+        }
+
+        function deleteJwtTokenCookie() {
+            const expirationDate = new Date(0);
+            document.cookie = 'JWT_TOKEN=; expires=' + expirationDate.toUTCString() + '; path=/';
         }
     </script>
 </body>

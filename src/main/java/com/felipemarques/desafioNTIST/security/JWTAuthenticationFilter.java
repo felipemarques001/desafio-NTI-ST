@@ -4,6 +4,7 @@ import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import com.felipemarques.desafioNTIST.services.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -42,11 +44,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if(authHeader == null) {
-            return null;
+    public String getToken(HttpServletRequest request) {
+        List<Cookie> cookies = List.of(request.getCookies());
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("JWT_TOKEN")) {
+                return cookie.getValue();
+            }
         }
-        return authHeader.replace("Bearer ", "");
+        return null;
     }
 }
