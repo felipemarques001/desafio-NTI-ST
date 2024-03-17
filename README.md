@@ -10,7 +10,7 @@ desafio para aprimorar e nos mostrar suas habilidades como desenvolvedor full-st
 
 Aqui estão as principais tecnologias usadas no projeto:
 
-* Java
+* Java 17 (por favor, use está versão do Java para poder acessar a documentação)
 * JWT Token
 * Spring Boot
 * Spring Security
@@ -26,6 +26,7 @@ Aqui estão as principais tecnologias usadas no projeto:
 ## Services Used
 
 * Github
+* Swagger e OpenAPI (para documentação)
 
 # ERD do Banco de Dados
 ![ERD banco de dados](https://github.com/felipemarques001/desafio-NTI-ST/assets/82411791/1b0ec0c0-a082-4f98-b91e-be5f6835f7e6)
@@ -37,7 +38,7 @@ Aqui estão as principais tecnologias usadas no projeto:
 
 
 # Documentation:
-
+A documentação pode ser acessada através da URL: http://localhost:9090/swagger-ui/index.html#
 
 ## Links
 - Repository: 
