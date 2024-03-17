@@ -2,13 +2,16 @@ package com.felipemarques.desafioNTIST.controllers;
 
 import com.felipemarques.desafioNTIST.dtos.TaskRegisterDTO;
 import com.felipemarques.desafioNTIST.models.Task;
+import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.services.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -22,13 +25,13 @@ public class TaskController {
     }
 
 
-    @GetMapping
+    @GetMapping("/create")
     public String showCreatTaskPage(Model model) {
         model.addAttribute("newTask", new TaskRegisterDTO());
         return "create_task_page";
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public String create(@Valid @ModelAttribute("newTask") TaskRegisterDTO taskDto,
                        BindingResult result) {
         if(result.hasErrors()) {
@@ -36,6 +39,18 @@ public class TaskController {
         }
         taskService.create(taskDto);
         return "redirect:/home";
+    }
+
+    @GetMapping("/uncompletedTasks")
+    public String showUncompletedTasks(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<String> namesUser = List.of(user.getName().split(" "));
+        List<Task> tasks = taskService.findUncompletedTaskByUserId();
+
+        model.addAttribute("firstUserName", namesUser.get(0));
+        model.addAttribute("tasks", tasks);
+
+        return "uncompleted_tasks_page";
     }
 
     @GetMapping("/delete")

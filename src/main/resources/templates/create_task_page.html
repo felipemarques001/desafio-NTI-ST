@@ -10,7 +10,7 @@
         <h1>Cadastrar tarefa</h1>
         <p>Preencha os campos abaixo para cadastrar uma tarefa:</p>
 
-        <form method="post" th:action="@{/tasks}" th:object="${newTask}">
+        <form method="post" th:action="@{/tasks/create}" th:object="${newTask}">
             <section class="input_box">
                 <label for="description">Descrição:</label>
                 <textarea id="description" th:field="*{description}"></textarea>
