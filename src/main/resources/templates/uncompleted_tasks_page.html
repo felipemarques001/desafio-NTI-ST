@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org" lang="pt-br">
+<head>
+    <title>Tarefas Incompletas</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/tasks_page.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <p>Olá, <span th:text="${firstUserName}"></span>! Aqui estão todas as suas tarefas incompletas.</p>
+            <form>
+                <input type="submit" value="Sair">
+            </form>
+        </nav>
+    </header>
+    <br>
+    <main>
+        <div id="main-container">
+            <section class="navigation-container">
+                <a th:href="@{/tasks/create}" id="create-task-button">Criar tarefa</a>
+                <a th:href="@{/tasks}" id="uncompleted-tasks-button">Mostrar todas as tarefas</a>
+            </section>
+            <table>
+                <thead>
+                <tr>
+                    <th class="table-header">Descrição</th>
+                    <th class="table-header">Prioridade</th>
+                    <th class="table-header">Feita</th>
+                    <th class="table-header">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.description}" class="table-data" id="description-text"></td>
+                    <td class="table-data">
+                        <span th:if="${task.priority.getValue() eq 'high'}">alta</span>
+                        <span th:if="${task.priority.getValue() eq 'medium'}">média</span>
+                        <span th:if="${task.priority.getValue() eq 'low'}">baixa</span>
+                    </td>
+                    <td class="table-data">
+                        <input type="checkbox" th:checked="${task.completed}" th:attr="taskId=${task.id}" onchange="updateCompletedField(this)">
+                    </td>
+                    <td class="table-data actions">
+                        <a th:href="@{/tasks/update(id=${task.id})}" id="update-task-button">Atualizar</a>
+                        <a th:href="@{/tasks/delete(id=${task.id})}" onclick="return confirm('Tem certeza que quer excluir esta tarefa?')" id="delete-task-button">Excluir</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        function updateCompletedField(element) {
+            if (confirm('Tem certeza que quer marcar a tarefa como feita?')) {
+                let taskId = element.getAttribute('taskId');
+                window.location.href = "/tasks/update_completed_field?id=" + taskId;
+            }
+        }
+    </script>
+</body>
+</html>
