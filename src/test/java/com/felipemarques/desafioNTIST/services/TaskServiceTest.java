@@ -154,8 +154,8 @@ class TaskServiceTest {
     }
 
     @Test
-    @DisplayName("Given uncompleted task, when findCompletedTaskByUserId(), then return uncompleted task list")
-    void findCompletedTaskByUserIdTest() {
+    @DisplayName("Given uncompleted task, when findUncompletedTaskByUserId(), then return uncompleted task list")
+    void findUncompletedTaskByUserIdTest() {
         task.setCompleted(false);
         List<Task> uncompletedTasks = List.of(task);
 
