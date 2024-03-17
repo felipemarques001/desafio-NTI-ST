@@ -59,7 +59,7 @@ public class TaskService {
         taskRepository.deleteById(taskId);
     }
 
-    public void updateCompletedValue(UUID taskId) {
+    public void updateCompletedStatus(UUID taskId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Task task = taskRepository.findByIdAndUserId(taskId, user.getId());
 
@@ -70,7 +70,7 @@ public class TaskService {
         taskRepository.updateCompletedStatus(!task.getCompleted(), taskId);
     }
 
-    public void updateDescriptionAndPriorityValue(UUID id, String description, Priority priority) {
+    public void updateValues(UUID id, String description, Priority priority) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Task task = taskRepository.findByIdAndUserId(id, user.getId());
 
