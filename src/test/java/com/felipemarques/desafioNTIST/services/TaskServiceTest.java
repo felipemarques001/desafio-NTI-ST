@@ -1,7 +1,7 @@
 package com.felipemarques.desafioNTIST.services;
 
 import com.felipemarques.desafioNTIST.dtos.TaskRegisterDTO;
-import com.felipemarques.desafioNTIST.exceptions.TaskNotBelongToUser;
+import com.felipemarques.desafioNTIST.exceptions.TaskNotBelongToUserException;
 import com.felipemarques.desafioNTIST.models.Priority;
 import com.felipemarques.desafioNTIST.models.Task;
 import com.felipemarques.desafioNTIST.models.User;
@@ -94,14 +94,14 @@ class TaskServiceTest {
     }
 
     @Test
-    @DisplayName("Not given task, when deleteTaskById(). then throws TaskNotBelongToUser exception")
+    @DisplayName("Not given task, when deleteTaskById(). then throws TaskNotBelongToUserException")
     void deleteTaskByIdTestCase2() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
 
         try {
             taskService.deleteById(TASK_ID);
         } catch (Exception ex) {
-            assertEquals(TaskNotBelongToUser.class, ex.getClass());
+            assertEquals(TaskNotBelongToUserException.class, ex.getClass());
             assertEquals(MESSAGE_TASK_NOT_BELONG_USER_EXCEPTION, ex.getMessage());
         }
     }
@@ -117,14 +117,14 @@ class TaskServiceTest {
     }
 
     @Test
-    @DisplayName("Not given task, when updateCompletedValue(), then throws TaskNotBelongToUser exception")
+    @DisplayName("Not given task, when updateCompletedValue(), then throws TaskNotBelongToUserException")
     void updateCompletedValueTestCase2() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
 
         try {
             taskService.updateCompletedStatus(TASK_ID);
         } catch (Exception ex) {
-            assertEquals(TaskNotBelongToUser.class, ex.getClass());
+            assertEquals(TaskNotBelongToUserException.class, ex.getClass());
             assertEquals(MESSAGE_TASK_NOT_BELONG_USER_EXCEPTION, ex.getMessage());
         }
     }
@@ -141,14 +141,14 @@ class TaskServiceTest {
     }
 
     @Test
-    @DisplayName("Not given task, when updateDescription(), then throws TaskNotBelongToUser exception")
+    @DisplayName("Not given task, when updateDescription(), then throws TaskNotBelongToUserException")
     void updateDescriptionTestCase2() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
 
         try {
             taskService.updateValues(TASK_ID, TASK_NEW_DESCRIPTION, Priority.MEDIUM);
         } catch (Exception ex) {
-            assertEquals(TaskNotBelongToUser.class, ex.getClass());
+            assertEquals(TaskNotBelongToUserException.class, ex.getClass());
             assertEquals(MESSAGE_TASK_NOT_BELONG_USER_EXCEPTION, ex.getMessage());
         }
     }

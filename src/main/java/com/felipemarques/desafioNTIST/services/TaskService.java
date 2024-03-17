@@ -1,7 +1,7 @@
 package com.felipemarques.desafioNTIST.services;
 
 import com.felipemarques.desafioNTIST.dtos.TaskRegisterDTO;
-import com.felipemarques.desafioNTIST.exceptions.TaskNotBelongToUser;
+import com.felipemarques.desafioNTIST.exceptions.TaskNotBelongToUserException;
 import com.felipemarques.desafioNTIST.models.Priority;
 import com.felipemarques.desafioNTIST.models.Task;
 import com.felipemarques.desafioNTIST.models.User;
@@ -53,7 +53,7 @@ public class TaskService {
         Task task = taskRepository.findByIdAndUserId(taskId, user.getId());
 
         if(task == null) {
-            throw new TaskNotBelongToUser("A tarefa não pertence ao usuário logado!");
+            throw new TaskNotBelongToUserException("A tarefa não pertence ao usuário logado!");
         }
 
         taskRepository.deleteById(taskId);
@@ -64,7 +64,7 @@ public class TaskService {
         Task task = taskRepository.findByIdAndUserId(taskId, user.getId());
 
         if(task == null) {
-            throw new TaskNotBelongToUser("A tarefa não pertence ao usuário logado!");
+            throw new TaskNotBelongToUserException("A tarefa não pertence ao usuário logado!");
         }
 
         taskRepository.updateCompletedStatus(!task.getCompleted(), taskId);
@@ -75,7 +75,7 @@ public class TaskService {
         Task task = taskRepository.findByIdAndUserId(id, user.getId());
 
         if(task == null) {
-            throw new TaskNotBelongToUser("A tarefa não pertence ao usuário logado!");
+            throw new TaskNotBelongToUserException("A tarefa não pertence ao usuário logado!");
         }
 
         taskRepository.updateDescriptionAndPriority(id, description, priority);
@@ -86,7 +86,7 @@ public class TaskService {
         Task task = taskRepository.findByIdAndUserId(taskId, user.getId());
 
         if(task == null) {
-            throw new TaskNotBelongToUser("A tarefa não pertence ao usuário logado!");
+            throw new TaskNotBelongToUserException("A tarefa não pertence ao usuário logado!");
         }
 
         return task;
