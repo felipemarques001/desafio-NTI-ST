@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -187,5 +188,35 @@ class TaskServiceTest {
         assertEquals(TASK_PRIORITY, tasksReturned.get(0).getPriority());
         assertEquals(false, tasksReturned.get(0).getCompleted());
         assertEquals(USER_ID, tasksReturned.get(0).getUserId());
+    }
+
+    @Test
+    void givenTasks_whenFindUncompletedTaskWithFilter_thenReturnTaskList() {
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        ArrayList<Task> uncompletedTasks = new ArrayList<>();
+
+        for(int i = 0; i < 3; i++) {
+            uncompletedTasks
+                    .add(new Task(UUID.randomUUID(),
+                            TASK_DESCRIPTION,
+                            Priority.HIGH,
+                            false,
+                            USER_ID)
+                    );
+        }
+
+        when(taskRepository.findUncompletedTasksByUserIdAndPriority(USER_ID, Priority.HIGH))
+                .thenReturn(uncompletedTasks);
+
+        List<Task> tasksReturned = taskService.findUncompletedTaskWithFilter(Priority.HIGH);
+
+        verify(taskRepository, times(1))
+                .findUncompletedTasksByUserIdAndPriority(USER_ID, Priority.HIGH);
+        assertEquals(3, tasksReturned.size());
     }
 }
