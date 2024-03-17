@@ -164,4 +164,28 @@ class TaskServiceTest {
             assertEquals("A tarefa não pertence ao usuário logado!", ex.getMessage());
         }
     }
+
+    @Test
+    void givenUncompletedTasks_whenFindUncompletedTaskByUserId_thenReturnTaskLis() {
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        task.setCompleted(false);
+        List<Task> uncompletedTasks = List.of(task);
+
+        when(taskRepository.findTasksUncompletedByUserId(USER_ID)).thenReturn(uncompletedTasks);
+
+        List<Task> tasksReturned = taskService.findUncompletedTaskByUserId();
+
+        verify(taskRepository, times(1)).findTasksUncompletedByUserId(USER_ID);
+        assertEquals(1, tasksReturned.size());
+        assertEquals(TASK_ID, tasksReturned.get(0).getId());
+        assertEquals(TASK_DESCRIPTION, tasksReturned.get(0).getDescription());
+        assertEquals(TASK_PRIORITY, tasksReturned.get(0).getPriority());
+        assertEquals(false, tasksReturned.get(0).getCompleted());
+        assertEquals(USER_ID, tasksReturned.get(0).getUserId());
+    }
 }
