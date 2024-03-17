@@ -3,6 +3,7 @@ package com.felipemarques.desafioNTIST.services;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,6 +37,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Given username and user, when loadUserByUsername, then return userDetails of user")
     void givenUsername_whenLoadUserByUsername_thenReturnUserDetails() {
         when(userRepository.findByEmail(anyString())).thenReturn(user);
 

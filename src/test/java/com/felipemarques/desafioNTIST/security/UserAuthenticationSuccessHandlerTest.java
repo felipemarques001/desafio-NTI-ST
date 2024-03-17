@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import java.io.IOException;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -52,8 +52,8 @@ class UserAuthenticationSuccessHandlerTest {
     }
 
     @Test
-    void whenUserLogged_whenOnAuthenticationSuccess_thenSetCookieAndRedirect() throws IOException, ServletException {
-
+    @DisplayName("When user performs login, call onAuthenticationSuccess() and set cookie and redirect")
+    void onAuthenticationSuccessTest() throws IOException, ServletException {
         when(authentication.getPrincipal()).thenReturn(user);
         when(tokenService.generateToken(any(User.class))).thenReturn(JWT_TOKEN);
 

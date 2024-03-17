@@ -4,6 +4,7 @@ import com.felipemarques.desafioNTIST.models.Priority;
 import com.felipemarques.desafioNTIST.models.Task;
 import com.felipemarques.desafioNTIST.models.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,7 +51,8 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void givenUserAndTask_whenSaveTask_thenReturnOneRowAffected() {
+    @DisplayName("Given user and task, when savetask(), then save user")
+    void saveTaskTest() {
         userRepository.save(user);
 
         int rowsAffected = taskRepository.save(task);
@@ -58,7 +60,8 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void givenUserAndTasks_whenFindByUserId_thenReturnTasks() {
+    @DisplayName("Given user and task, when findByUserId(), then return tasks founded")
+    void findByUserIdTest() {
         userRepository.save(user);
         taskRepository.save(task);
 
@@ -84,7 +87,8 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void givenTaskId_whenDeleteById_thenDeleteSuccessfully(){
+    @DisplayName("Given TASK_ID, when deleteById(), then delete task")
+    void deleteByIdTest(){
         userRepository.save(user);
         taskRepository.save(task);
 
@@ -96,7 +100,8 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void givenCompletedAndId_whenUpdateCompletedStatus_thenReturnOneRowAffected() {
+    @DisplayName("Given !TASK_COMPLETED and task ID, when updateCompletedStatus(), then update completed value")
+    void updateCompletedStatusTest() {
         userRepository.save(user);
         taskRepository.save(task);
 
@@ -108,7 +113,8 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void givenTaskAndUser_whenFindByIdAndUserId_thenReturnTask() {
+    @DisplayName("Given user and task, when findByIdAndUserId(), then return task")
+    void findByIdAndUserIdTest() {
         userRepository.save(user);
         taskRepository.save(task);
 
@@ -121,26 +127,36 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void givenNotTask_whenFindByIdAndUserId_thenNull() {
+    @DisplayName("Not given task, when findByIdAndUserId(), then return null")
+    void findByIdAndUserIdTestCase2() {
         Task taskFounded = taskRepository.findByIdAndUserId(task.getId(), user.getId());
 
         assertNull(taskFounded);
     }
 
     @Test
-    void givenIdAndNewValues_whenUpdateDescriptionAndPriority_thenReturnOneRowAffected() {
+    @DisplayName("Given new description and priority, when updateDescriptionAndPriority(), then update values")
+    void updateDescriptionAndPriorityTest() {
         userRepository.save(user);
         taskRepository.save(task);
 
+        String newDescription = "new description";
+        Priority newPriority = Priority.MEDIUM;
+
         int rowAffected = taskRepository.updateDescriptionAndPriority(TASK_ID,
-                "New description",
-                Priority.MEDIUM);
+                newDescription,
+                newPriority);
+
+        Task taskFounded = taskRepository.findByIdAndUserId(task.getId(), user.getId());
 
         assertEquals(1, rowAffected);
+        assertEquals(newDescription, taskFounded.getDescription());
+        assertEquals(newPriority, taskFounded.getPriority());
     }
 
     @Test
-    void givenTasks_whenFindTasksUncompletedByUserId_thenReturnTasksNotCompleted() {
+    @DisplayName("Given tasks, when findTasksUncompletedByUserId(), then return uncompleted tasks")
+    void findTasksUncompletedByUserIdTest() {
         userRepository.save(user);
         taskRepository.save(task);
 
@@ -160,7 +176,8 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void givenTasks_whenFindUncompletedTasksByUserIdAndPriority_thenReturnTasks() {
+    @DisplayName("Given tasks, when findUncompletedTasksByUserIdAndPriority(), then return uncompleted filtered tasks")
+    void findUncompletedTasksByUserIdAndPriorityTest() {
         userRepository.save(user);
 
         for(int i = 0; i < 3; i++) {

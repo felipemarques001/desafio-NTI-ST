@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.felipemarques.desafioNTIST.models.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -26,6 +27,7 @@ class TokenServiceTest {
     }
 
     @Test
+    @DisplayName("Given user, when generateToken(), then return valid JWT token")
     void givenUser_whenGenerateToken_thenReturnValidToken() {
         try {
             String token = tokenService.generateToken(user);
@@ -38,7 +40,8 @@ class TokenServiceTest {
     }
 
     @Test
-    void givenValidToken_whenValidateToken_thenReturnEmail() {
+    @DisplayName("Given valid JWT token, when validateTokenAndGetEmail(), then return user e-mail")
+    void validateTokenAndGetEmailTest() {
         String token = tokenService.generateToken(user);
         String email = tokenService.validateTokenAndGetEmail(token);
 
@@ -46,7 +49,8 @@ class TokenServiceTest {
     }
 
     @Test
-    void givenInvalidToken_whenValidateToken_thenThrowJWTVerificationException() {
+    @DisplayName("Given invalid JWT token, when validateTokenAndGetEmail(), then throws JWTVerificationException")
+    void validateTokenAndGetEmailTestCase2() {
         String invalidToken = "invalid-token";
 
         try {

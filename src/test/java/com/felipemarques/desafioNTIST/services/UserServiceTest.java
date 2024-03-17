@@ -6,6 +6,7 @@ import com.felipemarques.desafioNTIST.exceptions.InvalidPasswordException;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -47,17 +48,19 @@ class UserServiceTest {
     }
 
     @Test
-    void givenUserRegisterDTO_whenRegister_thenVerify() {
+    @DisplayName("Given userRegisterDTO, when register(), then calls save() of userRepository")
+    void registerTest() {
         when(userRepository.findByEmail(anyString())).thenReturn(null);
         when(passwordEncoder.encode(anyString())).thenReturn(PASSWORD);
 
         service.register(registerDTO);
 
-        verify(userRepository, times(1)).save(any());
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
-    void givenUserRegisterDTO_whenEmailInUse_thenThrowResourceAlreadyInUseException() {
+    @DisplayName("Given e-mail already in use, when register(), then throws FieldAlreadyInUseException")
+    void registerTestCase2() {
         String errorMessage = "Error in the field 'email', the value '" + EMAIL + "' is already in use!";
         when(userRepository.findByEmail(anyString())).thenReturn(user);
 
@@ -70,7 +73,8 @@ class UserServiceTest {
     }
 
     @Test
-    void givenInvalidPasswords_whenRegister_thenThrowInvalidPasswordException() {
+    @DisplayName("Given invalid password, when register(), then throws InvalidPasswordException")
+    void registerTestCase3() {
         String errorMessage = "The password must contain at least one uppercase letter," +
                 " one lowercase letter, one number, and one special character.";
 

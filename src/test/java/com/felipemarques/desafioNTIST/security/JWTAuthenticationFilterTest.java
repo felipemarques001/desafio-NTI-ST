@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -45,8 +46,7 @@ class JWTAuthenticationFilterTest {
     @Mock
     private FilterChain filterChain;
 
-    @Mock
-    private SecurityContextHolder securityContextHolder;
+    Authentication authentication;
 
     private User user;
     private final String NAME = "Vanessa";
@@ -58,13 +58,14 @@ class JWTAuthenticationFilterTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         user = new User(UUID.randomUUID(), NAME, EMAIL, PASSWORD);
+        authentication = new UsernamePasswordAuthenticationToken(user,
+                user.getPassword(),
+                user.getAuthorities());
     }
 
     @Test
-    void givenToken_whenDoFilter_thenAuthenticateUser() throws ServletException, IOException {
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
-
+    @DisplayName("Given JWT token, when doFilter(), then authenticate user")
+    void doFilterTest() throws ServletException, IOException {
         when(request.getHeader(any(String.class))).thenReturn("Bearer " + JWT_TOKEN);
         when(tokenService.validateTokenAndGetEmail(any(String.class))).thenReturn(EMAIL);
         when(userRepository.findByEmail(any(String.class))).thenReturn(user);
@@ -78,10 +79,8 @@ class JWTAuthenticationFilterTest {
     }
 
     @Test
-    void notGivenToken_whenDoFilter_thenNotAuthenticateUserWithToken() throws ServletException, IOException {
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-
+    @DisplayName("Not given JWT token, when doFilter(), then not authenticate user")
+    void doFilterTestCase2() throws ServletException, IOException {
         when(request.getHeader(any(String.class))).thenReturn(null);
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
@@ -93,7 +92,8 @@ class JWTAuthenticationFilterTest {
     }
 
     @Test
-    void givenToken_whenGetToken_thenReturnToken()
+    @DisplayName("Given JWT token, when getToken(), then return JWT token")
+    void getTokenTest()
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String token = "test_token";
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
@@ -107,7 +107,8 @@ class JWTAuthenticationFilterTest {
     }
 
     @Test
-    void notGivenToken_whenGetToken_thenReturnNull()
+    @DisplayName("Not given JWT token, when getToken(), then return null")
+    void getTokenTestCase2()
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method getTokenMethod = JWTAuthenticationFilter.class
                 .getDeclaredMethod("getToken", HttpServletRequest.class);

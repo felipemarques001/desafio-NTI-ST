@@ -3,6 +3,7 @@ package com.felipemarques.desafioNTIST.repositories;
 import com.felipemarques.desafioNTIST.models.User;
 import org.checkerframework.checker.units.qual.N;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,13 +38,15 @@ class UserRepositoryTest {
     }
 
     @Test
-    void givenUser_whenSave_thenReturnOneRowAffected() {
+    @DisplayName("Given user, when save(), then save user")
+    void saveTest() {
         int rowsAffected = userRepository.save(user);
         assertEquals(1, rowsAffected);
     }
 
     @Test
-    void givenSavedUser_whenFindByEmail_thenReturnSavedUser() {
+    @DisplayName("Given user and e-mail, when findByEmail(), then return user")
+    void findByEmailTest() {
         userRepository.save(user);
         User userFounded = (User) userRepository.findByEmail(EMAIL);
 

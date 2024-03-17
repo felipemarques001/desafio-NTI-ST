@@ -7,6 +7,7 @@ import com.felipemarques.desafioNTIST.models.Task;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.repositories.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,7 +32,6 @@ class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
 
-    private User user;
     private TaskRegisterDTO taskRegisterDTO;
     private Task task;
 
@@ -39,6 +39,8 @@ class TaskServiceTest {
     private final String TASK_DESCRIPTION = "description example";
     private final Priority TASK_PRIORITY = Priority.HIGH;
     private final Boolean TASK_COMPLETED = true;
+    private final String TASK_NEW_DESCRIPTION = "new description";
+    private final String MESSAGE_TASK_NOT_BELONG_USER_EXCEPTION = "A tarefa não pertence ao usuário logado!";
     private final UUID USER_ID = UUID.randomUUID();
     private final String USER_NAME = "Vanessa";
     private final String USER_EMAIL = "vanessa@gmail.com";
@@ -48,32 +50,27 @@ class TaskServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        user = new User(USER_ID, USER_NAME, USER_EMAIL, USER_PASSWORD);
+        User user = new User(USER_ID, USER_NAME, USER_EMAIL, USER_PASSWORD);
         taskRegisterDTO = new TaskRegisterDTO(TASK_DESCRIPTION, TASK_PRIORITY);
         task = new Task(TASK_ID, TASK_DESCRIPTION, TASK_PRIORITY, TASK_COMPLETED, USER_ID);
+
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
     }
 
     @Test
-    void givenUserAndTask_whenCreate_thenCallTaskRepository() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Given user and task, when create(), then call save() of TaskRepository")
+    void createTest() {
         taskService.create(taskRegisterDTO);
 
         verify(taskRepository, times(1)).save(any(Task.class));
     }
 
     @Test
-    void givenUserAndTask_whenFindTaskByUserId_thenReturnTasks() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Given task list, when findTaskByUserId(), then return tasks")
+    void findTaskByUserIdTest() {
         when(taskRepository.findByUserId(USER_ID))
                 .thenReturn(List.of(task));
 
@@ -88,13 +85,8 @@ class TaskServiceTest {
     }
 
     @Test
-    void givenTaskId_whenDeleteTaskById_thenCallDeleteMethod() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Given task, when deleteTaskById(). then call deleteById() of TaskRepository")
+    void deleteTaskByIdTest() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(task);
 
         taskService.deleteById(TASK_ID);
@@ -102,104 +94,68 @@ class TaskServiceTest {
     }
 
     @Test
-    void givenNotTask_whenDeleteTaskById_thenThrowTaskNotBelongToUserException() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Not given task, when deleteTaskById(). then throws TaskNotBelongToUser exception")
+    void deleteTaskByIdTestCase2() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
 
         try {
             taskService.deleteById(TASK_ID);
         } catch (Exception ex) {
             assertEquals(TaskNotBelongToUser.class, ex.getClass());
-            assertEquals("A tarefa não pertence ao usuário logado!", ex.getMessage());
+            assertEquals(MESSAGE_TASK_NOT_BELONG_USER_EXCEPTION, ex.getMessage());
         }
     }
 
     @Test
-    void givenTaskAndUser_whenUpdateCompletedValue_thenUpdateCompletedField() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Given task, when updateCompletedValue(), then calls updateCompletedStatus() of TaskRepository")
+    void updateCompletedValueTest() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(task);
 
-        taskService.updateCompletedValue(TASK_ID);
+        taskService.updateCompletedStatus(TASK_ID);
 
         verify(taskRepository, times(1)).updateCompletedStatus(!TASK_COMPLETED, TASK_ID);
     }
 
     @Test
-    void givenNotTask_whenUpdateCompletedValue_thenThrowTaskNotBelongToUserException() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Not given task, when updateCompletedValue(), then throws TaskNotBelongToUser exception")
+    void updateCompletedValueTestCase2() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
 
         try {
-            taskService.updateCompletedValue(TASK_ID);
+            taskService.updateCompletedStatus(TASK_ID);
         } catch (Exception ex) {
             assertEquals(TaskNotBelongToUser.class, ex.getClass());
-            assertEquals("A tarefa não pertence ao usuário logado!", ex.getMessage());
+            assertEquals(MESSAGE_TASK_NOT_BELONG_USER_EXCEPTION, ex.getMessage());
         }
     }
 
     @Test
-    void givenIdAndNewValues_whenUpdateDescriptionAndPriorityValue_thenUpdateTask() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Given TASK_ID and new values, when updateDescription(), then calls updateDescriptionAndPriority() of TaskRepository")
+    void updateDescriptionTest() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(task);
 
-        taskService.updateDescriptionAndPriorityValue(TASK_ID,
-                "New description",
-                Priority.MEDIUM);
+        taskService.updateValues(TASK_ID, TASK_NEW_DESCRIPTION, Priority.MEDIUM);
 
         verify(taskRepository, times(1))
-                .updateDescriptionAndPriority(TASK_ID,
-                "New description",
-                Priority.MEDIUM);
+                .updateDescriptionAndPriority(TASK_ID, TASK_NEW_DESCRIPTION, Priority.MEDIUM);
     }
 
     @Test
-    void givenNotTask_whenUpdateDescriptionAndPriorityValue_thenThrowTaskNotBelongToUserException() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Not given task, when updateDescription(), then throws TaskNotBelongToUser exception")
+    void updateDescriptionTestCase2() {
         when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
 
         try {
-            taskService.updateDescriptionAndPriorityValue(TASK_ID,
-                    "New description",
-                    Priority.MEDIUM);
+            taskService.updateValues(TASK_ID, TASK_NEW_DESCRIPTION, Priority.MEDIUM);
         } catch (Exception ex) {
             assertEquals(TaskNotBelongToUser.class, ex.getClass());
-            assertEquals("A tarefa não pertence ao usuário logado!", ex.getMessage());
+            assertEquals(MESSAGE_TASK_NOT_BELONG_USER_EXCEPTION, ex.getMessage());
         }
     }
 
     @Test
-    void givenUncompletedTasks_whenFindUncompletedTaskByUserId_thenReturnTaskLis() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Given uncompleted task, when findCompletedTaskByUserId(), then return uncompleted task list")
+    void findCompletedTaskByUserIdTest() {
         task.setCompleted(false);
         List<Task> uncompletedTasks = List.of(task);
 
@@ -217,13 +173,8 @@ class TaskServiceTest {
     }
 
     @Test
-    void givenTasks_whenFindUncompletedTaskWithFilter_thenReturnTaskList() {
-        Authentication authentication = UsernamePasswordAuthenticationToken
-                .authenticated(user, user.getPassword(), user.getAuthorities());
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-
+    @DisplayName("Given uncompleted tasks, when findUncompletedTaskWithFilter(), then return uncompleted task list")
+    void findUncompletedTaskWithFilterTest() {
         ArrayList<Task> uncompletedTasks = new ArrayList<>();
 
         for(int i = 0; i < 3; i++) {
