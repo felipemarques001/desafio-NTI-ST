@@ -49,6 +49,13 @@ public class TaskService {
     }
 
     public void deleteById(UUID taskId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Task task = taskRepository.findByIdAndUserId(taskId, user.getId());
+
+        if(task == null) {
+            throw new TaskNotBelongToUser("A tarefa não pertence ao usuário logado!");
+        }
+
         taskRepository.deleteById(taskId);
     }
 
