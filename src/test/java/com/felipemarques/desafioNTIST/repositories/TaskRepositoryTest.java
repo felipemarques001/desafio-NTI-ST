@@ -158,4 +158,41 @@ class TaskRepositoryTest {
 
         assertEquals(3, tasks.size());
     }
+
+    @Test
+    void givenTasks_whenFindUncompletedTasksByUserIdAndPriority_thenReturnTasks() {
+        userRepository.save(user);
+
+        for(int i = 0; i < 3; i++) {
+            taskRepository.save(
+                    new Task(UUID.randomUUID(),
+                            TASK_DESCRIPTION,
+                            Priority.HIGH,
+                            false,
+                            USER_ID)
+            );
+        }
+        for(int i = 0; i < 3; i++) {
+            taskRepository.save(
+                    new Task(UUID.randomUUID(),
+                            TASK_DESCRIPTION,
+                            Priority.MEDIUM,
+                            false,
+                            USER_ID)
+            );
+        }
+        for(int i = 0; i < 3; i++) {
+            taskRepository.save(
+                    new Task(UUID.randomUUID(),
+                            TASK_DESCRIPTION,
+                            Priority.LOW,
+                            false,
+                            USER_ID)
+            );
+        }
+
+        List<Task> tasks = taskRepository.findUncompletedTasksByUserIdAndPriority(USER_ID, Priority.HIGH);
+
+        assertEquals(3, tasks.size());
+    }
 }
