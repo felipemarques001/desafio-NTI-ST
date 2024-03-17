@@ -1,6 +1,7 @@
 package com.felipemarques.desafioNTIST.controllers;
 
 import com.felipemarques.desafioNTIST.dtos.TaskRegisterDTO;
+import com.felipemarques.desafioNTIST.models.Priority;
 import com.felipemarques.desafioNTIST.models.Task;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.services.TaskService;
@@ -63,6 +64,20 @@ public class TaskController {
 
         return "uncompleted_tasks_page";
     }
+
+    @GetMapping("/uncompletedTasksWithFilter")
+    public String showUncompletedTasksWithFilter(@RequestParam Priority priority, Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<String> namesUser = List.of(user.getName().split(" "));
+        List<Task> tasks = taskService.findUncompletedTaskWithFilter(priority);
+
+        model.addAttribute("firstUserName", namesUser.get(0));
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("filterValue", priority);
+
+        return "uncompleted_tasks_page";
+    }
+
 
     @GetMapping("/delete")
     public String delete(@RequestParam UUID id) {

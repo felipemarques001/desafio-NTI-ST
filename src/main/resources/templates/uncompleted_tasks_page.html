@@ -21,6 +21,17 @@
                 <a th:href="@{/tasks/create}" id="create-task-button">Criar tarefa</a>
                 <a th:href="@{/tasks}" id="uncompleted-tasks-button">Mostrar todas as tarefas</a>
             </section>
+
+            <section class="filter-container">
+                <label for="filter">Filtrar por:</label>
+                <select id="filter" onchange="filter(this)">
+                    <option disabled selected>Selecione uma opção...</option>
+                    <option value="HIGH">Alta</option>
+                    <option value="MEDIUM">Média</option>
+                    <option value="LOW">Baixa</option>
+                </select>
+            </section>
+
             <table>
                 <thead>
                 <tr>
@@ -57,6 +68,11 @@
                 let taskId = element.getAttribute('taskId');
                 window.location.href = "/tasks/update_completed_field?id=" + taskId;
             }
+        }
+
+        function filter(element) {
+            let filterOption = element.value;
+            window.location.href = "/tasks/uncompletedTasksWithFilter?priority=" + filterOption;
         }
     </script>
 </body>
