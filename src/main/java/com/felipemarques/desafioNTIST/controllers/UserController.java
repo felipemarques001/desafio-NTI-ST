@@ -4,6 +4,7 @@ import com.felipemarques.desafioNTIST.dtos.UserRegisterDTO;
 import com.felipemarques.desafioNTIST.exceptions.FieldAlreadyInUseException;
 import com.felipemarques.desafioNTIST.exceptions.InvalidPasswordException;
 import com.felipemarques.desafioNTIST.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,17 +23,29 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(
+            summary = "Exibe a página de login",
+            description = "Exibe a página **login_page.html** para o usuário realizar login"
+    )
     @GetMapping("/login")
     public String showLoginPage() {
         return "login_page";
     }
 
+    @Operation(
+            summary = "Exibe a página de cadastro do usuário",
+            description = "Exibe a página **register_page.html** para o usuário se cadastrar"
+    )
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("newUser", new UserRegisterDTO());
         return "register_page";
     }
 
+    @Operation(
+            summary = "Salva uma novo User no banco de dados",
+            description = "Salva o usuário no banco de dados e redireciona para **/login**"
+    )
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("newUser") UserRegisterDTO userDTO,
                            BindingResult result,
@@ -51,6 +64,6 @@ public class UserController {
             return "register_page";
         }
 
-        return "redirect:/login?success";
+        return "redirect:/login";
     }
 }
