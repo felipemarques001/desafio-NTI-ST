@@ -66,22 +66,37 @@ main {
     align-items: center;
 }
 
-#create-task-button {
+.navigation-container {
+    justify-self: flex-start;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+#create-task-button, #uncompleted-tasks-button {
     color: #fff;
     background: #008000FF;
     cursor: pointer;
-    border-radius: 5px;
     padding: 10px 20px;
+    border-radius: 5px;
     margin-bottom: 20px;
     align-self: flex-start;
-    border: 1px solid #fff;
+    border: 1px solid #008000FF;
     transition: 0.3s ease;
 }
 
 #create-task-button:hover {
     background: #fff;
     color: #008000FF;
-    border: 1px solid #008000FF;
+}
+
+#uncompleted-tasks-button {
+    background: #FF6347FF;
+    border: 1px solid #FF6347FF;
+}
+
+#uncompleted-tasks-button:hover {
+    background: #fff;
+    color: #FF6347FF;
 }
 
 #main-container table {

@@ -3,7 +3,7 @@
 <head>
     <title>Tarefas</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" th:href="@{/css/home_page.css}">
+    <link rel="stylesheet" th:href="@{/css/tasks_page.css}">
 </head>
 <body>
     <header>
@@ -17,7 +17,10 @@
     <br>
     <main>
         <div id="main-container">
-            <a th:href="@{/tasks/create}" id="create-task-button">Criar tarefa</a>
+            <section class="navigation-container">
+                <a th:href="@{/tasks/create}" id="create-task-button">Criar tarefa</a>
+                <a th:href="@{/tasks/uncompletedTasks}" id="uncompleted-tasks-button">Mostrar tarefas incompletas</a>
+            </section>
             <table>
                 <thead>
                 <tr>
