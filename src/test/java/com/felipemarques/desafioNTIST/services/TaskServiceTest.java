@@ -102,6 +102,24 @@ class TaskServiceTest {
     }
 
     @Test
+    void givenNotTask_whenDeleteTaskById_thenThrowTaskNotBelongToUserException() {
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(null);
+
+        try {
+            taskService.deleteById(TASK_ID);
+        } catch (Exception ex) {
+            assertEquals(TaskNotBelongToUser.class, ex.getClass());
+            assertEquals("A tarefa não pertence ao usuário logado!", ex.getMessage());
+        }
+    }
+
+    @Test
     void givenTaskAndUser_whenUpdateCompletedValue_thenUpdateCompletedField() {
         Authentication authentication = UsernamePasswordAuthenticationToken
                 .authenticated(user, user.getPassword(), user.getAuthorities());
