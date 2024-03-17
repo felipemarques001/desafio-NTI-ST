@@ -24,6 +24,17 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    @GetMapping
+    public String showTasks(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<String> namesUser = List.of(user.getName().split(" "));
+        List<Task> tasks = taskService.findByUserId();
+
+        model.addAttribute("firstUserName", namesUser.get(0));
+        model.addAttribute("tasks", tasks);
+
+        return "tasks_page";
+    }
 
     @GetMapping("/create")
     public String showCreatTaskPage(Model model) {
@@ -38,7 +49,7 @@ public class TaskController {
             return "create_task_page";
         }
         taskService.create(taskDto);
-        return "redirect:/home";
+        return "redirect:/tasks";
     }
 
     @GetMapping("/uncompletedTasks")
@@ -56,13 +67,13 @@ public class TaskController {
     @GetMapping("/delete")
     public String delete(@RequestParam UUID id) {
         taskService.deleteById(id);
-        return "redirect:/home";
+        return "redirect:/tasks";
     }
 
     @GetMapping("/update_completed_field")
     public String updateCompletedField(@RequestParam UUID id) {
         taskService.updateCompletedValue(id);
-        return "redirect:/home";
+        return "redirect:/tasks";
     }
 
     @GetMapping("/update")
@@ -91,6 +102,6 @@ public class TaskController {
                 taskDto.getDescription(),
                 taskDto.getPriority());
 
-        return "redirect:/home";
+        return "redirect:/tasks";
     }
 }

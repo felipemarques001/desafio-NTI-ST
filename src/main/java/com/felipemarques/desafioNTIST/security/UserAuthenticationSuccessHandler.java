@@ -31,6 +31,6 @@ public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHa
         cookie.setMaxAge(15 * 60);
         response.addCookie(cookie);
 
-        response.sendRedirect("/home");
+        response.sendRedirect("/tasks");
     }
 }
