@@ -62,6 +62,6 @@ class UserAuthenticationSuccessHandlerTest {
         verify(response, times(1)).addCookie(argThat(cookie ->
             cookie.getName().equals("JWT_TOKEN") && cookie.getValue().equals(JWT_TOKEN)
         ));
-        verify(response, times(1)).sendRedirect("/home");
+        verify(response, times(1)).sendRedirect("/tasks");
     }
 }
