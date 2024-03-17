@@ -1,14 +1,10 @@
 package com.felipemarques.desafioNTIST.services;
 
-import com.felipemarques.desafioNTIST.dtos.UserLoginDTO;
 import com.felipemarques.desafioNTIST.dtos.UserRegisterDTO;
 import com.felipemarques.desafioNTIST.exceptions.FieldAlreadyInUseException;
 import com.felipemarques.desafioNTIST.exceptions.InvalidPasswordException;
 import com.felipemarques.desafioNTIST.models.User;
 import com.felipemarques.desafioNTIST.repositories.UserRepository;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +17,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final TokenService tokenService;
 
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       AuthenticationManager authenticationManager,
-                       TokenService tokenService) {
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.tokenService = tokenService;
     }
 
     public void register(UserRegisterDTO dto) {
@@ -49,15 +39,6 @@ public class UserService {
         );
 
         userRepository.save(newUser);
-    }
-
-    public String login(UserLoginDTO dto) {
-        UsernamePasswordAuthenticationToken usernamePasswordToken =
-                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
-
-        Authentication authentication = authenticationManager.authenticate(usernamePasswordToken);
-
-        return tokenService.generateToken((User) authentication.getPrincipal());
     }
 
     private void validatePassword(String password) {

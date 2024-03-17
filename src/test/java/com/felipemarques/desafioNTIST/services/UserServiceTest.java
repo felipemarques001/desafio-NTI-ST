@@ -1,6 +1,5 @@
 package com.felipemarques.desafioNTIST.services;
 
-import com.felipemarques.desafioNTIST.dtos.UserLoginDTO;
 import com.felipemarques.desafioNTIST.dtos.UserRegisterDTO;
 import com.felipemarques.desafioNTIST.exceptions.FieldAlreadyInUseException;
 import com.felipemarques.desafioNTIST.exceptions.InvalidPasswordException;
@@ -11,10 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -36,14 +31,7 @@ class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Mock
-    private AuthenticationManager authenticationManager;
-
-    @Mock
-    private TokenService tokenService;
-
     private UserRegisterDTO registerDTO;
-    private UserLoginDTO loginDTO;
     private User user;
 
     private final String NAME = "Vanessa";
@@ -55,7 +43,6 @@ class UserServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         registerDTO = new UserRegisterDTO(NAME, EMAIL, PASSWORD);
-        loginDTO = new UserLoginDTO(EMAIL, PASSWORD);
         user = new User(UUID.randomUUID(), NAME, EMAIL, PASSWORD);
     }
 
@@ -100,22 +87,5 @@ class UserServiceTest {
                 assertEquals(errorMessage, ex.getMessage());
             }
         });
-    }
-
-    @Test
-    void givenUserAuthenticated_whenLogin_thenReturnToken() {
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-        String token = "mocked_token";
-
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(authentication);
-        when(tokenService.generateToken(any(User.class))).thenReturn(token);
-
-        String generatedToken = service.login(loginDTO);
-
-        verify(authenticationManager, times(1))
-                .authenticate(any(UsernamePasswordAuthenticationToken.class));
-        assertEquals(token, generatedToken);
     }
 }
