@@ -196,4 +196,33 @@ class TaskServiceTest {
                 .findUncompletedTasksByUserIdAndPriority(USER_ID, Priority.HIGH);
         assertEquals(3, tasksReturned.size());
     }
+
+    @Test
+    @DisplayName("Given task, when findByIdAndUserId(), then return task founded")
+    void findByIdAndUserIdTest() {
+        when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID))
+                .thenReturn(task);
+
+        Task tasksReturned = taskService.findByIdAndUserId(TASK_ID);
+
+        assertEquals(TASK_ID, tasksReturned.getId());
+        assertEquals(TASK_DESCRIPTION, tasksReturned.getDescription());
+        assertEquals(TASK_PRIORITY, tasksReturned.getPriority());
+        assertEquals(TASK_COMPLETED, tasksReturned.getCompleted());
+        assertEquals(USER_ID, tasksReturned.getUserId());
+    }
+
+    @Test
+    @DisplayName("Not given task, when findByIdAndUserId(), then throws TaskNotBelongToUserException")
+    void findByIdAndUserIdTestCase2() {
+        when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID))
+                .thenReturn(null);
+
+        try {
+            taskService.findByIdAndUserId(TASK_ID);
+        } catch (Exception ex) {
+            assertEquals(TaskNotBelongToUserException.class, ex.getClass());
+            assertEquals(MESSAGE_TASK_NOT_BELONG_USER_EXCEPTION, ex.getMessage());
+        }
+    }
 }
