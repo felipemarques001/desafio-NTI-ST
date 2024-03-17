@@ -1,0 +1,11 @@
+.filter-container {
+    align-self: start;
+    padding: 10px 0;
+}
+
+.filter-container select {
+    padding: 5px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+}
