@@ -89,6 +89,14 @@ class TaskServiceTest {
 
     @Test
     void givenTaskId_whenDeleteTaskById_thenCallDeleteMethod() {
+        Authentication authentication = UsernamePasswordAuthenticationToken
+                .authenticated(user, user.getPassword(), user.getAuthorities());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        when(taskRepository.findByIdAndUserId(TASK_ID, USER_ID)).thenReturn(task);
+
         taskService.deleteById(TASK_ID);
         verify(taskRepository, times(1)).deleteById(TASK_ID);
     }
