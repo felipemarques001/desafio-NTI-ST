@@ -2,6 +2,9 @@ function updateCompletedField(element) {
     if (confirm('Tem certeza que quer marcar a tarefa como feita?')) {
         let taskId = element.getAttribute('taskId');
         window.location.href = "/tasks/update_completed_field?id=" + taskId;
+    } else {
+        // Faz com que a checkbox não seja alterada
+        element.checked = !element.checked;
     }
 }
 
