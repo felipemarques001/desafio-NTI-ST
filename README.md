@@ -1,7 +1,7 @@
 ## Desafio NTI-ST descrição
 Esse projeto envolve um desafio dado aos candidatos que desejam estagiar no Núcleo de Tecnologia de Serra Talhada (NTI-ST).
 
-A descrição do desafio é:
+### A descrição do desafio é:
 * Estamos desenvolvendo um aplicativo para gerenciamento de tarefas, os famosos apps
 "TO-DO". Você será responsável pela API e pelo frontend da aplicação. Aproveite esse
 desafio para aprimorar e nos mostrar suas habilidades como desenvolvedor full-stack!
@@ -10,17 +10,17 @@ desafio para aprimorar e nos mostrar suas habilidades como desenvolvedor full-st
 
 Aqui estão as principais tecnologias usadas no projeto:
 
-* Java 17 (por favor, use está versão do Java para poder acessar a documentação)
-* JWT Token
+* Java 17
 * Spring Boot
 * Spring Security
+* Token JWT (fornecido por jwt.io)
 * Validation
 * JDBC API
 * Lombok
 * Thymeleaf
 * HTML
 * CSS
-* JAVASCRIPT
+* JavaScript
 * Flyway
 * PostgreSQL
 * H2
