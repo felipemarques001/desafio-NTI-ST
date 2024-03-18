@@ -18,15 +18,28 @@ Aqui estão as principais tecnologias usadas no projeto:
 * JDBC API
 * Lombok
 * Thymeleaf
+* HTML
+* CSS
+* JAVASCRIPT
 * Flyway
 * PostgreSQL
 * H2
 * Git
 
-## Services Used
+
+## Serviços usados
 
 * Github
 * Swagger e OpenAPI (para documentação)
+
+
+# Documentação:
+A documentação pode ser acessada através da URL: http://localhost:9090/swagger-ui/index.html#
+
+
+# Avisos
+* A porta padrão do servidor está definida em **9090**, mas fique à vontade para definir outra porta
+
 
 # ERD do Banco de Dados
 * Nome do banco de dados usado: db_desafio_NTI_ST
@@ -38,9 +51,6 @@ Aqui estão as principais tecnologias usadas no projeto:
 ![página principal](https://github.com/felipemarques001/desafio-NTI-ST/assets/82411791/0bd70b89-e8c5-4dbb-a522-a8a080656f81)
 ![página de cadastro de tarefa](https://github.com/felipemarques001/desafio-NTI-ST/assets/82411791/5a5a08f6-6fc8-4b1b-87ea-609cf798833c)
 
-
-# Documentation:
-A documentação pode ser acessada através da URL: http://localhost:9090/swagger-ui/index.html#
 
 ## Links
 - Repository: 
