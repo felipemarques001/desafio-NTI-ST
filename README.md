@@ -29,6 +29,7 @@ Aqui estão as principais tecnologias usadas no projeto:
 * Swagger e OpenAPI (para documentação)
 
 # ERD do Banco de Dados
+* Nome do banco de dados usado: db_desafio_NTI_ST
 ![ERD banco de dados](https://github.com/felipemarques001/desafio-NTI-ST/assets/82411791/1b0ec0c0-a082-4f98-b91e-be5f6835f7e6)
 
 # Algumas imagens do projeto
